@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart — UI Reference</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="bg-neutral-50 text-neutral-900 font-sans min-h-screen">
+    <!-- Header / Nav -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/listing.html" class="text-xl font-bold text-brand-700">ShopBench</a>
+        <nav class="hidden sm:flex gap-6 text-sm font-medium text-neutral-600">
+          <a href="/listing.html" class="hover:text-neutral-900">Products</a>
+          <a href="/filter.html" class="hover:text-neutral-900">Filter</a>
+          <a href="/cart.html" class="text-brand-600 font-semibold">Cart (3)</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-3xl font-bold text-neutral-900 mb-8">Your Cart</h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <!-- Line items -->
+        <div class="lg:col-span-2 space-y-4">
+
+          <!-- Line item 1 -->
+          <div class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-4 flex gap-4">
+            <div class="w-20 h-20 bg-neutral-100 rounded-lg overflow-hidden shrink-0">
+              <img
+                src="https://placehold.co/80x80/e2e8f0/64748b?text=Item"
+                alt="Wireless Headphones"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs text-neutral-400">Electronics</span>
+                  <h2 class="text-sm font-semibold text-neutral-900 leading-snug mt-0.5">
+                    Wireless Noise-Cancelling Headphones Pro
+                  </h2>
+                </div>
+                <button
+                  aria-label="Remove item"
+                  class="text-neutral-300 hover:text-danger transition-colors shrink-0 text-lg leading-none"
+                >
+                  ×
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <!-- Quantity controls -->
+                <div class="flex items-center border border-neutral-200 rounded-[var(--radius-button)] overflow-hidden">
+                  <button class="px-2.5 py-1.5 text-neutral-600 hover:bg-neutral-50 transition-colors text-sm font-medium" aria-label="Decrease quantity">−</button>
+                  <span class="px-3 py-1.5 text-sm font-medium text-neutral-900 border-x border-neutral-200 min-w-[2.5rem] text-center" aria-label="Quantity">1</span>
+                  <button class="px-2.5 py-1.5 text-neutral-600 hover:bg-neutral-50 transition-colors text-sm font-medium" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="text-base font-bold text-neutral-900">$89.99</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Line item 2 -->
+          <div class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-4 flex gap-4">
+            <div class="w-20 h-20 bg-neutral-100 rounded-lg overflow-hidden shrink-0">
+              <img
+                src="https://placehold.co/80x80/e2e8f0/64748b?text=Item"
+                alt="Yoga Mat"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs text-neutral-400">Sports</span>
+                  <h2 class="text-sm font-semibold text-neutral-900 leading-snug mt-0.5">
+                    Yoga Mat — Non-Slip 6mm TPE
+                  </h2>
+                </div>
+                <button
+                  aria-label="Remove item"
+                  class="text-neutral-300 hover:text-danger transition-colors shrink-0 text-lg leading-none"
+                >
+                  ×
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center border border-neutral-200 rounded-[var(--radius-button)] overflow-hidden">
+                  <button class="px-2.5 py-1.5 text-neutral-600 hover:bg-neutral-50 transition-colors text-sm font-medium" aria-label="Decrease quantity">−</button>
+                  <span class="px-3 py-1.5 text-sm font-medium text-neutral-900 border-x border-neutral-200 min-w-[2.5rem] text-center" aria-label="Quantity">2</span>
+                  <button class="px-2.5 py-1.5 text-neutral-600 hover:bg-neutral-50 transition-colors text-sm font-medium" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="text-base font-bold text-neutral-900">$57.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Line item 3 -->
+          <div class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-4 flex gap-4">
+            <div class="w-20 h-20 bg-neutral-100 rounded-lg overflow-hidden shrink-0">
+              <img
+                src="https://placehold.co/80x80/e2e8f0/64748b?text=Item"
+                alt="Clean Code book"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs text-neutral-400">Books</span>
+                  <h2 class="text-sm font-semibold text-neutral-900 leading-snug mt-0.5">
+                    Clean Code by Robert C. Martin
+                  </h2>
+                </div>
+                <button
+                  aria-label="Remove item"
+                  class="text-neutral-300 hover:text-danger transition-colors shrink-0 text-lg leading-none"
+                >
+                  ×
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-3">
+                <div class="flex items-center border border-neutral-200 rounded-[var(--radius-button)] overflow-hidden">
+                  <button class="px-2.5 py-1.5 text-neutral-600 hover:bg-neutral-50 transition-colors text-sm font-medium" aria-label="Decrease quantity">−</button>
+                  <span class="px-3 py-1.5 text-sm font-medium text-neutral-900 border-x border-neutral-200 min-w-[2.5rem] text-center" aria-label="Quantity">1</span>
+                  <button class="px-2.5 py-1.5 text-neutral-600 hover:bg-neutral-50 transition-colors text-sm font-medium" aria-label="Increase quantity">+</button>
+                </div>
+                <span class="text-base font-bold text-neutral-900">$35.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Continue shopping link -->
+          <div class="pt-2">
+            <a href="/listing.html" class="text-sm font-medium text-brand-600 hover:text-brand-700">
+              &larr; Continue Shopping
+            </a>
+          </div>
+        </div>
+
+        <!-- Order summary -->
+        <aside class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-6 space-y-4">
+          <h2 class="text-lg font-semibold text-neutral-900">Order Summary</h2>
+
+          <dl class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <dt class="text-neutral-600">Subtotal (4 items)</dt>
+              <dd class="font-medium text-neutral-900">$181.99</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-neutral-600">Shipping</dt>
+              <dd class="font-medium text-success">Free</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-neutral-600">Estimated tax</dt>
+              <dd class="font-medium text-neutral-900">$14.56</dd>
+            </div>
+            <hr class="border-neutral-200" />
+            <div class="flex justify-between text-base font-bold text-neutral-900">
+              <dt>Total</dt>
+              <dd>$196.55</dd>
+            </div>
+          </dl>
+
+          <!-- Promo code -->
+          <div class="flex gap-2">
+            <input
+              type="text"
+              placeholder="Promo code"
+              class="flex-1 border border-neutral-200 rounded-[var(--radius-button)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+            <button class="border border-neutral-300 text-sm font-medium text-neutral-700 px-3 py-2 rounded-[var(--radius-button)] hover:bg-neutral-50 transition-colors">
+              Apply
+            </button>
+          </div>
+
+          <!-- Checkout button -->
+          <button class="w-full bg-brand-600 text-white font-semibold py-3 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+            Proceed to Checkout
+          </button>
+
+          <!-- Trust badges -->
+          <p class="text-xs text-center text-neutral-400">
+            Secure checkout · 30-day returns · Free shipping over $50
+          </p>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

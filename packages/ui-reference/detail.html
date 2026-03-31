@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail — UI Reference</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="bg-neutral-50 text-neutral-900 font-sans min-h-screen">
+    <!-- Header / Nav -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/listing.html" class="text-xl font-bold text-brand-700">ShopBench</a>
+        <nav class="hidden sm:flex gap-6 text-sm font-medium text-neutral-600">
+          <a href="/listing.html" class="hover:text-neutral-900">Products</a>
+          <a href="/filter.html" class="hover:text-neutral-900">Filter</a>
+          <a href="/cart.html" class="hover:text-neutral-900">Cart (1)</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Breadcrumb -->
+      <nav class="mb-6 text-sm text-neutral-500" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2">
+          <li><a href="/listing.html" class="hover:text-neutral-700">Products</a></li>
+          <li aria-hidden="true" class="text-neutral-300">/</li>
+          <li><a href="/filter.html" class="hover:text-neutral-700">Electronics</a></li>
+          <li aria-hidden="true" class="text-neutral-300">/</li>
+          <li class="text-neutral-900 font-medium">Wireless Headphones</li>
+        </ol>
+      </nav>
+
+      <!-- Product layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+        <!-- Image gallery -->
+        <div class="space-y-4">
+          <!-- Main image -->
+          <div class="aspect-square bg-neutral-100 rounded-[var(--radius-card)] overflow-hidden">
+            <img
+              src="https://placehold.co/600x600/e2e8f0/64748b?text=Headphones"
+              alt="Wireless Noise-Cancelling Headphones — main view"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <!-- Thumbnails -->
+          <div class="grid grid-cols-4 gap-3">
+            <button class="aspect-square bg-neutral-100 rounded-lg overflow-hidden ring-2 ring-brand-500">
+              <img src="https://placehold.co/100x100/e2e8f0/64748b?text=1" alt="View 1" class="w-full h-full object-cover" />
+            </button>
+            <button class="aspect-square bg-neutral-100 rounded-lg overflow-hidden hover:ring-2 hover:ring-neutral-300">
+              <img src="https://placehold.co/100x100/e2e8f0/64748b?text=2" alt="View 2" class="w-full h-full object-cover" />
+            </button>
+            <button class="aspect-square bg-neutral-100 rounded-lg overflow-hidden hover:ring-2 hover:ring-neutral-300">
+              <img src="https://placehold.co/100x100/e2e8f0/64748b?text=3" alt="View 3" class="w-full h-full object-cover" />
+            </button>
+            <button class="aspect-square bg-neutral-100 rounded-lg overflow-hidden hover:ring-2 hover:ring-neutral-300">
+              <img src="https://placehold.co/100x100/e2e8f0/64748b?text=4" alt="View 4" class="w-full h-full object-cover" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Product info -->
+        <div class="flex flex-col gap-6">
+          <!-- Category badge -->
+          <span class="text-xs font-semibold text-brand-600 uppercase tracking-widest">Electronics</span>
+
+          <!-- Title -->
+          <h1 class="text-3xl font-bold text-neutral-900 leading-tight">
+            Wireless Noise-Cancelling Headphones Pro
+          </h1>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-0.5">
+              <span class="text-warning">★★★★</span><span class="text-neutral-300">★</span>
+            </div>
+            <span class="text-sm font-medium text-neutral-700">4.0</span>
+            <span class="text-sm text-neutral-400">(234 reviews)</span>
+          </div>
+
+          <!-- Price -->
+          <div class="flex items-baseline gap-3">
+            <span class="text-4xl font-bold text-neutral-900">$89.99</span>
+            <span class="text-lg text-neutral-400 line-through">$129.99</span>
+            <span class="text-sm font-semibold text-success bg-green-50 px-2 py-0.5 rounded-full">Save 31%</span>
+          </div>
+
+          <!-- Stock status -->
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-success"></span>
+            <span class="text-sm text-neutral-600">In stock — ships within 2 business days</span>
+          </div>
+
+          <hr class="border-neutral-200" />
+
+          <!-- Description -->
+          <div class="space-y-3 text-neutral-700 text-sm leading-relaxed">
+            <p>
+              Experience audio like never before with our flagship wireless headphones. Advanced
+              active noise cancellation blocks out the world so you can focus on what matters —
+              your music, your calls, or the blissful sound of silence.
+            </p>
+            <ul class="list-disc list-inside space-y-1 text-neutral-600">
+              <li>40-hour battery life with ANC on</li>
+              <li>Multipoint Bluetooth 5.3 — connect two devices simultaneously</li>
+              <li>40mm custom-tuned drivers with Hi-Res Audio certification</li>
+              <li>Foldable design with premium carrying case</li>
+              <li>Built-in voice assistant support</li>
+            </ul>
+          </div>
+
+          <!-- Quantity selector + Add to cart -->
+          <div class="flex items-center gap-4 pt-2">
+            <div class="flex items-center border border-neutral-300 rounded-[var(--radius-button)] overflow-hidden">
+              <button class="px-3 py-2 text-neutral-600 hover:bg-neutral-50 transition-colors font-medium">−</button>
+              <span class="px-4 py-2 text-sm font-medium text-neutral-900 border-x border-neutral-300 min-w-[3rem] text-center">1</span>
+              <button class="px-3 py-2 text-neutral-600 hover:bg-neutral-50 transition-colors font-medium">+</button>
+            </div>
+            <button class="flex-1 bg-brand-600 text-white font-semibold py-3 px-6 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+              Add to Cart
+            </button>
+          </div>
+
+          <!-- Secondary actions -->
+          <div class="flex gap-3">
+            <button class="flex-1 border border-neutral-300 text-neutral-700 font-medium py-2.5 px-4 rounded-[var(--radius-button)] hover:bg-neutral-50 transition-colors text-sm">
+              ♡ Save to Wishlist
+            </button>
+            <button class="flex-1 border border-neutral-300 text-neutral-700 font-medium py-2.5 px-4 rounded-[var(--radius-button)] hover:bg-neutral-50 transition-colors text-sm">
+              ↗ Share
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews section -->
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold text-neutral-900 mb-6">Customer Reviews</h2>
+        <div class="space-y-6">
+          <div class="bg-white rounded-[var(--radius-card)] p-6 shadow-[var(--shadow-card)]">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="font-semibold text-neutral-900">Alex T.</p>
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span class="text-warning text-sm">★★★★★</span>
+                  <span class="text-xs text-neutral-400 ml-1">Verified purchase</span>
+                </div>
+              </div>
+              <time class="text-xs text-neutral-400">March 2026</time>
+            </div>
+            <p class="text-sm text-neutral-700 leading-relaxed">
+              The noise cancellation is incredible — I can finally work in a busy office without
+              distractions. Battery life lives up to the claim too. Sound quality is excellent
+              across all genres.
+            </p>
+          </div>
+          <div class="bg-white rounded-[var(--radius-card)] p-6 shadow-[var(--shadow-card)]">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="font-semibold text-neutral-900">Jordan M.</p>
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+                  <span class="text-xs text-neutral-400 ml-1">Verified purchase</span>
+                </div>
+              </div>
+              <time class="text-xs text-neutral-400">February 2026</time>
+            </div>
+            <p class="text-sm text-neutral-700 leading-relaxed">
+              Great headphones overall. The multipoint connection is super handy for switching
+              between my laptop and phone. Deducting one star only because the ear cups could be
+              slightly larger for extended wear sessions.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

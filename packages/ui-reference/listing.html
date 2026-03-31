@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Listing — UI Reference</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="bg-neutral-50 text-neutral-900 font-sans min-h-screen">
+    <!-- Header / Nav -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/listing.html" class="text-xl font-bold text-brand-700">ShopBench</a>
+        <nav class="hidden sm:flex gap-6 text-sm font-medium text-neutral-600">
+          <a href="/listing.html" class="text-brand-600 font-semibold">Products</a>
+          <a href="/filter.html" class="hover:text-neutral-900">Filter</a>
+          <a href="/cart.html" class="hover:text-neutral-900">Cart (0)</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Page heading -->
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-neutral-900">All Products</h1>
+        <span class="text-sm text-neutral-500">Showing 1–12 of 120 products</span>
+      </div>
+
+      <!-- Product grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Product card (repeated 12 times for layout reference) -->
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Electronics</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Wireless Noise-Cancelling Headphones
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(234)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$89.99</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Clothing</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Premium Cotton Crew-Neck T-Shirt
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★★</span>
+              <span class="text-xs text-neutral-500">(89)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$24.99</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Books</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              JavaScript: The Definitive Guide, 7th Edition
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(512)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$49.99</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Home</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Ceramic Pour-Over Coffee Dripper Set
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★</span><span class="text-neutral-300 text-sm">★★</span>
+              <span class="text-xs text-neutral-500">(67)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$34.00</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Electronics</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              USB-C Hub 7-in-1 Multiport Adapter
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(1,204)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$42.00</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Sports</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Yoga Mat — Non-Slip 6mm TPE
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★★</span>
+              <span class="text-xs text-neutral-500">(340)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$28.50</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Clothing</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Slim-Fit Chino Trousers — Navy
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(178)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$59.99</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Home</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Bamboo Cutting Board Set of 3
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(421)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$19.99</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Electronics</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Smart LED Desk Lamp with USB Charging
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(892)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$39.99</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Books</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Clean Code by Robert C. Martin
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★★</span>
+              <span class="text-xs text-neutral-500">(3,781)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$35.00</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Sports</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Adjustable Dumbbell Set 5–52 lbs
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+              <span class="text-xs text-neutral-500">(2,105)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$299.00</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+          <div class="aspect-square bg-neutral-100 overflow-hidden">
+            <img
+              src="https://placehold.co/400x400/e2e8f0/64748b?text=Product"
+              alt="Product image"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Home</span>
+            <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">
+              Scented Soy Wax Candle — Vanilla &amp; Sandalwood
+            </h2>
+            <div class="flex items-center gap-1 mb-2">
+              <span class="text-warning text-sm">★★★★★</span>
+              <span class="text-xs text-neutral-500">(156)</span>
+            </div>
+            <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+              <span class="text-lg font-bold text-neutral-900">$18.00</span>
+              <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="mt-10 flex items-center justify-center gap-2" aria-label="Pagination">
+        <button class="px-3 py-2 text-sm font-medium text-neutral-400 border border-neutral-200 rounded-[var(--radius-button)] cursor-not-allowed" disabled>
+          &larr; Prev
+        </button>
+        <button class="px-3 py-2 text-sm font-medium bg-brand-600 text-white rounded-[var(--radius-button)]">1</button>
+        <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">2</button>
+        <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">3</button>
+        <span class="px-2 text-neutral-400">…</span>
+        <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">10</button>
+        <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">
+          Next &rarr;
+        </button>
+      </nav>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filter / Category — UI Reference</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="bg-neutral-50 text-neutral-900 font-sans min-h-screen">
+    <!-- Header / Nav -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/listing.html" class="text-xl font-bold text-brand-700">ShopBench</a>
+        <nav class="hidden sm:flex gap-6 text-sm font-medium text-neutral-600">
+          <a href="/listing.html" class="hover:text-neutral-900">Products</a>
+          <a href="/filter.html" class="text-brand-600 font-semibold">Filter</a>
+          <a href="/cart.html" class="hover:text-neutral-900">Cart (2)</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-3xl font-bold text-neutral-900 mb-6">Browse &amp; Filter</h1>
+
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar filters -->
+        <aside class="w-full lg:w-64 shrink-0 space-y-6">
+          <!-- Category filter -->
+          <div class="bg-white rounded-[var(--radius-card)] p-5 shadow-[var(--shadow-card)]">
+            <h2 class="text-sm font-semibold text-neutral-800 uppercase tracking-wide mb-4">Category</h2>
+            <ul class="space-y-2">
+              <li>
+                <label class="flex items-center gap-3 text-sm text-neutral-700 cursor-pointer hover:text-neutral-900">
+                  <input type="checkbox" checked class="accent-brand-600 w-4 h-4 rounded" />
+                  <span>All</span>
+                  <span class="ml-auto text-xs text-neutral-400 tabular-nums">120</span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 text-sm text-neutral-700 cursor-pointer hover:text-neutral-900">
+                  <input type="checkbox" class="accent-brand-600 w-4 h-4 rounded" />
+                  <span>Electronics</span>
+                  <span class="ml-auto text-xs text-neutral-400 tabular-nums">38</span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 text-sm text-neutral-700 cursor-pointer hover:text-neutral-900">
+                  <input type="checkbox" class="accent-brand-600 w-4 h-4 rounded" />
+                  <span>Clothing</span>
+                  <span class="ml-auto text-xs text-neutral-400 tabular-nums">29</span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 text-sm text-neutral-700 cursor-pointer hover:text-neutral-900">
+                  <input type="checkbox" class="accent-brand-600 w-4 h-4 rounded" />
+                  <span>Books</span>
+                  <span class="ml-auto text-xs text-neutral-400 tabular-nums">22</span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 text-sm text-neutral-700 cursor-pointer hover:text-neutral-900">
+                  <input type="checkbox" class="accent-brand-600 w-4 h-4 rounded" />
+                  <span>Home</span>
+                  <span class="ml-auto text-xs text-neutral-400 tabular-nums">18</span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 text-sm text-neutral-700 cursor-pointer hover:text-neutral-900">
+                  <input type="checkbox" class="accent-brand-600 w-4 h-4 rounded" />
+                  <span>Sports</span>
+                  <span class="ml-auto text-xs text-neutral-400 tabular-nums">13</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Price range filter -->
+          <div class="bg-white rounded-[var(--radius-card)] p-5 shadow-[var(--shadow-card)]">
+            <h2 class="text-sm font-semibold text-neutral-800 uppercase tracking-wide mb-4">Price Range</h2>
+            <div class="space-y-3">
+              <input
+                type="range"
+                min="0"
+                max="500"
+                value="300"
+                class="w-full accent-brand-600"
+                aria-label="Maximum price"
+              />
+              <div class="flex items-center justify-between text-sm text-neutral-700">
+                <div class="flex items-center gap-1">
+                  <span class="text-neutral-400">$</span>
+                  <input
+                    type="number"
+                    value="0"
+                    min="0"
+                    max="500"
+                    class="w-16 border border-neutral-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    aria-label="Minimum price"
+                  />
+                </div>
+                <span class="text-neutral-400">—</span>
+                <div class="flex items-center gap-1">
+                  <span class="text-neutral-400">$</span>
+                  <input
+                    type="number"
+                    value="300"
+                    min="0"
+                    max="500"
+                    class="w-16 border border-neutral-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    aria-label="Maximum price"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rating filter -->
+          <div class="bg-white rounded-[var(--radius-card)] p-5 shadow-[var(--shadow-card)]">
+            <h2 class="text-sm font-semibold text-neutral-800 uppercase tracking-wide mb-4">Minimum Rating</h2>
+            <ul class="space-y-2">
+              <li>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="radio" name="rating" value="0" checked class="accent-brand-600 w-4 h-4" />
+                  <span class="text-sm text-neutral-700 group-hover:text-neutral-900">Any rating</span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="radio" name="rating" value="4" class="accent-brand-600 w-4 h-4" />
+                  <span class="flex items-center gap-1">
+                    <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+                    <span class="text-xs text-neutral-500 ml-1">&amp; up</span>
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="radio" name="rating" value="3" class="accent-brand-600 w-4 h-4" />
+                  <span class="flex items-center gap-1">
+                    <span class="text-warning text-sm">★★★</span><span class="text-neutral-300 text-sm">★★</span>
+                    <span class="text-xs text-neutral-500 ml-1">&amp; up</span>
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="radio" name="rating" value="2" class="accent-brand-600 w-4 h-4" />
+                  <span class="flex items-center gap-1">
+                    <span class="text-warning text-sm">★★</span><span class="text-neutral-300 text-sm">★★★</span>
+                    <span class="text-xs text-neutral-500 ml-1">&amp; up</span>
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Reset button -->
+          <button class="w-full border border-neutral-300 text-sm font-medium text-neutral-700 py-2.5 rounded-[var(--radius-button)] hover:bg-neutral-50 transition-colors">
+            Reset Filters
+          </button>
+        </aside>
+
+        <!-- Product grid -->
+        <div class="flex-1 min-w-0">
+          <!-- Toolbar -->
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm text-neutral-500">
+              Showing <strong class="text-neutral-800">120</strong> products
+            </p>
+            <div class="flex items-center gap-2">
+              <label for="sort" class="text-sm text-neutral-600 sr-only">Sort by</label>
+              <select id="sort" class="text-sm border border-neutral-200 rounded-[var(--radius-button)] px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-neutral-700">
+                <option>Sort: Featured</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Avg. Rating</option>
+                <option>Newest</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <!-- Cards (representative subset) -->
+            <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+              <div class="aspect-square bg-neutral-100 overflow-hidden">
+                <img src="https://placehold.co/300x300/e2e8f0/64748b?text=Product" alt="Product" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col flex-1">
+                <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Electronics</span>
+                <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">Wireless Noise-Cancelling Headphones</h2>
+                <div class="flex items-center gap-1 mb-2">
+                  <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+                  <span class="text-xs text-neutral-500">(234)</span>
+                </div>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+                  <span class="text-lg font-bold text-neutral-900">$89.99</span>
+                  <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">Add</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+              <div class="aspect-square bg-neutral-100 overflow-hidden">
+                <img src="https://placehold.co/300x300/e2e8f0/64748b?text=Product" alt="Product" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col flex-1">
+                <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Electronics</span>
+                <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">USB-C Hub 7-in-1 Multiport Adapter</h2>
+                <div class="flex items-center gap-1 mb-2">
+                  <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+                  <span class="text-xs text-neutral-500">(1,204)</span>
+                </div>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+                  <span class="text-lg font-bold text-neutral-900">$42.00</span>
+                  <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">Add</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+              <div class="aspect-square bg-neutral-100 overflow-hidden">
+                <img src="https://placehold.co/300x300/e2e8f0/64748b?text=Product" alt="Product" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col flex-1">
+                <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Electronics</span>
+                <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">Smart LED Desk Lamp with USB Charging</h2>
+                <div class="flex items-center gap-1 mb-2">
+                  <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+                  <span class="text-xs text-neutral-500">(892)</span>
+                </div>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+                  <span class="text-lg font-bold text-neutral-900">$39.99</span>
+                  <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">Add</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+              <div class="aspect-square bg-neutral-100 overflow-hidden">
+                <img src="https://placehold.co/300x300/e2e8f0/64748b?text=Product" alt="Product" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col flex-1">
+                <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Clothing</span>
+                <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">Premium Cotton Crew-Neck T-Shirt</h2>
+                <div class="flex items-center gap-1 mb-2">
+                  <span class="text-warning text-sm">★★★★★</span>
+                  <span class="text-xs text-neutral-500">(89)</span>
+                </div>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+                  <span class="text-lg font-bold text-neutral-900">$24.99</span>
+                  <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">Add</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+              <div class="aspect-square bg-neutral-100 overflow-hidden">
+                <img src="https://placehold.co/300x300/e2e8f0/64748b?text=Product" alt="Product" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col flex-1">
+                <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Books</span>
+                <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">Clean Code by Robert C. Martin</h2>
+                <div class="flex items-center gap-1 mb-2">
+                  <span class="text-warning text-sm">★★★★★</span>
+                  <span class="text-xs text-neutral-500">(3,781)</span>
+                </div>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+                  <span class="text-lg font-bold text-neutral-900">$35.00</span>
+                  <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">Add</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden flex flex-col">
+              <div class="aspect-square bg-neutral-100 overflow-hidden">
+                <img src="https://placehold.co/300x300/e2e8f0/64748b?text=Product" alt="Product" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4 flex flex-col flex-1">
+                <span class="text-xs font-medium text-brand-600 uppercase tracking-wide mb-1">Sports</span>
+                <h2 class="text-sm font-semibold text-neutral-900 line-clamp-2 mb-2 flex-1">Adjustable Dumbbell Set 5–52 lbs</h2>
+                <div class="flex items-center gap-1 mb-2">
+                  <span class="text-warning text-sm">★★★★</span><span class="text-neutral-300 text-sm">★</span>
+                  <span class="text-xs text-neutral-500">(2,105)</span>
+                </div>
+                <div class="flex items-center justify-between mt-auto pt-2 border-t border-neutral-100">
+                  <span class="text-lg font-bold text-neutral-900">$299.00</span>
+                  <button class="text-xs font-medium bg-brand-600 text-white px-3 py-1.5 rounded-[var(--radius-button)] hover:bg-brand-700 transition-colors">Add</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Pagination -->
+          <nav class="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
+            <button class="px-3 py-2 text-sm font-medium text-neutral-400 border border-neutral-200 rounded-[var(--radius-button)] cursor-not-allowed" disabled>
+              &larr; Prev
+            </button>
+            <button class="px-3 py-2 text-sm font-medium bg-brand-600 text-white rounded-[var(--radius-button)]">1</button>
+            <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">2</button>
+            <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">3</button>
+            <button class="px-3 py-2 text-sm font-medium text-neutral-700 border border-neutral-200 rounded-[var(--radius-button)] hover:bg-neutral-50">
+              Next &rarr;
+            </button>
+          </nav>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
