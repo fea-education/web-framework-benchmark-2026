@@ -24,3 +24,15 @@ Started: (not yet run)
 - 10 integration tests pass: counts, shapes, 404 behaviour, latency >= 500ms, health <50ms under latency
 - Root pnpm test was pre-existing-broken (packages/benchmark stub has no test files); api tests pass directly
 ---
+--- Slice 11 completed: astro-solid — Astro with SolidJS islands, all four pages ---
+2026-04-01
+- Static output (output: 'static') with @astrojs/solid-js integration and @tailwindcss/vite plugin
+- passthroughImageService() is REQUIRED — the noop service entrypoint still causes Astro to fetch remote images at build time; passthroughImageService() is the only way to skip remote image fetching entirely
+- picsum.photos uses HTTP redirects; Astro's loadRemoteImage rejects redirects — passthroughImageService avoids this entirely
+- All data comes from @benchmark/data static import (no API fetch at build time — API is not running during Docker build)
+- SolidJS islands (client:load): FilterPage.tsx uses createSignal/createMemo/For/Show for filtering; CartPage.tsx uses createStore/produce for cart state
+- Do NOT pass import.meta.env values as props to client:load islands — esbuild processes the .astro file for client bundling and Unexpected "env" errors occur in Docker (esbuild@0.25.12) even though local build succeeds
+- Dockerfile must copy root tsconfig.json (line: COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.json ./) or data package build fails in Docker
+- Static site served with `serve` package on port 3000; docker-compose maps 3006:3000
+- 103 pages built: 100 product detail pages + index + filter + cart
+---

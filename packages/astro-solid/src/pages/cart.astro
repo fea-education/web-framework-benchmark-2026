@@ -1,0 +1,12 @@
+---
+import type { Product } from '@benchmark/data';
+import { products as staticProducts } from '@benchmark/data';
+import Layout from '../layouts/Layout.astro';
+import CartPage from '../components/CartPage';
+
+const products: Product[] = staticProducts;
+---
+
+<Layout title="Shopping Cart — ShopBench">
+  <CartPage client:load sampleProducts={products} />
+</Layout>

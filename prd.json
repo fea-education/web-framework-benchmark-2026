@@ -8,7 +8,7 @@
       "file": "issues/01-monorepo-scaffold-shared-data.md",
       "type": "AFK",
       "blockedBy": [],
-      "passes": false
+      "passes": true
     },
     {
       "id": "02",
@@ -16,7 +16,7 @@
       "file": "issues/02-shared-api-latency.md",
       "type": "AFK",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "03",
@@ -24,7 +24,7 @@
       "file": "issues/03-tailwind-base-config.md",
       "type": "AFK",
       "blockedBy": [],
-      "passes": false
+      "passes": true
     },
     {
       "id": "04",
@@ -32,7 +32,7 @@
       "file": "issues/04-docker-compose-skeleton.md",
       "type": "AFK",
       "blockedBy": ["02"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "05",
@@ -40,7 +40,7 @@
       "file": "issues/05-benchmark-runner-aggregation.md",
       "type": "AFK",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "06",
@@ -48,7 +48,7 @@
       "file": "issues/06-nextjs-app.md",
       "type": "AFK",
       "blockedBy": ["02", "03", "04"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "07",
@@ -88,7 +88,7 @@
       "file": "issues/11-astro-solid.md",
       "type": "AFK",
       "blockedBy": ["02", "03", "04"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "12",

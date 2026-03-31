@@ -1,0 +1,16 @@
+---
+import type { Product } from '@benchmark/data';
+import { products as staticProducts } from '@benchmark/data';
+import Layout from '../layouts/Layout.astro';
+import FilterPage from '../components/FilterPage';
+
+const products: Product[] = staticProducts;
+---
+
+<Layout title="Filter Products — ShopBench">
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Filter Products</h1>
+    <p class="text-gray-500 mb-8">Use the filters to find exactly what you're looking for</p>
+    <FilterPage client:load initialProducts={products} />
+  </div>
+</Layout>
