@@ -18,11 +18,41 @@ Full spec: `docs/01-prd.md`
 
 When all stories have `passes: true`, output `<promise>COMPLETE</promise>` and stop.
 
+## Parallel execution with sub-agents
+
+Where multiple slices are eligible at the same time (no unresolved blockers), launch them as parallel sub-agents rather than implementing them sequentially. This is the primary way to reduce total wall-clock time on this project.
+
+**How to parallelise:**
+
+1. Identify all slices where `passes: false` AND every ID in `blockedBy` is `passes: true`
+2. For each eligible slice, spawn a sub-agent with this instruction:
+   > "Read `CLAUDE.md` for project conventions. Read `issues/<id>-<title>.md` for the full spec. Implement the slice, run quality checks, commit with message `feat: slice <id> — <title>`, then report back with either SUCCESS or FAILURE and a summary."
+3. Wait for all sub-agents to complete before updating `prd.json` — mark each slice `passes: true` only on SUCCESS
+4. If a sub-agent reports FAILURE, do not mark it done; treat it as still `passes: false` and retry or escalate
+
+**Parallelisation map for this project:**
+
+| Wave | Slices | Can run in parallel |
+|------|--------|---------------------|
+| 1 | 01, 03 | Yes — no blockers |
+| 2 | 02, 05 | Yes — both need only 01; launch together once 01 is done |
+| 3 | 04 | After 02 |
+| 4 | 06, 07, 08, 09, 10, 11, 12, 13 | Yes — all eight framework apps unblock simultaneously after 02+03+04; launch all eight in parallel |
+| 5 | 14 | After all of 05–13 |
+
+Wave 4 is the largest parallelisation opportunity: eight independent framework app implementations that share no files with each other (each writes only to its own `packages/<name>/` directory and its own service entry in `docker-compose.yml`).
+
+**Sub-agent isolation rules:**
+- Each sub-agent works only in its own package directory (`packages/<name>/`) and appends its service to `docker-compose.yml`
+- Sub-agents must NOT modify `prd.json` — the orchestrating agent does that after receiving results
+- Sub-agents must NOT modify other packages' files
+- If two sub-agents need to edit the same file (e.g. `docker-compose.yml`), the orchestrator merges the changes after both complete rather than letting agents write concurrently
+
 ## Dependency order
 
 Slices 01 and 03 can start immediately (no blockers).
 Slice 02 requires 01. Slice 04 requires 02. Slice 05 requires 01.
-Slices 06–13 (framework apps) all require 02, 03, and 04 — they can be implemented in any order or in parallel sessions.
+Slices 06–13 (framework apps) all require 02, 03, and 04 — launch all eight in parallel once those are done.
 Slice 14 requires all of 05–13.
 
 ## Environment requirements
