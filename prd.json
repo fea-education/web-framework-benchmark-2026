@@ -1,5 +1,6 @@
 {
   "branchName": "web-framework-benchmark-2026",
+  "_passesValues": "true = done, false = not yet started or in progress, \"aborted\" = failed after 5 attempts (see errors/<id>-error.md)",
   "userStories": [
     {
       "id": "01",

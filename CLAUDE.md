@@ -8,15 +8,68 @@ Full spec: `docs/01-prd.md`
 
 ## How to resume after a context reset
 
-1. Read `prd.json` — it tracks which slices are `passes: true` and which are `passes: false`
+1. Read `prd.json` — it tracks which slices are `passes: true`, `passes: false`, or `"aborted"`
 2. Read `progress.txt` (if it exists) — append-only learnings from previous iterations
-3. Identify the next eligible slice: `passes: false` AND all `blockedBy` IDs are `passes: true`
+3. Identify the next eligible slice: `passes: false` AND all `blockedBy` IDs are `passes: true` (aborted blockers count as skip — see below)
 4. Read the corresponding `issues/<id>-*.md` file for the full spec of that slice
-5. Implement it, run quality checks (see below), commit, then mark it `passes: true` in `prd.json`
+5. Implement it using the retry protocol (see below), run quality checks, commit, then mark it `passes: true` in `prd.json`
 6. Append any learnings to `progress.txt`
 7. Repeat from step 3
 
-When all stories have `passes: true`, output `<promise>COMPLETE</promise>` and stop.
+When all stories are either `passes: true` or `"aborted"`, output `<promise>COMPLETE</promise>` and stop.
+
+## Retry and abort protocol
+
+The goal is to complete as many slices as possible. A failing slice must never block the whole run — it gets retried, and if still failing, aborted and skipped so unblocked siblings can proceed.
+
+**Per-slice retry loop:**
+
+1. Attempt to implement the slice and pass all quality checks
+2. If any check fails, diagnose the error and try a different approach
+3. Repeat up to **5 attempts total**
+4. If the slice has not passed after 5 attempts:
+   a. Write an error log to `errors/<id>-error.md` (format below)
+   b. Commit the error log: `chore: abort slice <id> — error log`
+   c. Set `"passes": "aborted"` in `prd.json` for that slice
+   d. Do NOT leave broken code committed — revert any partial implementation for that slice before moving on
+   e. Continue to the next eligible slice
+
+**What counts as a new attempt:**
+Each attempt must try a meaningfully different approach (different dependency version, different API usage, different implementation strategy). Simply re-running the same failing command does not count as a new attempt.
+
+**Handling aborted blockers:**
+If a slice's blocker is `"aborted"`, treat the blocker as resolved for the purpose of unblocking dependents. The dependent slice should note in its implementation that the blocker is absent and adapt accordingly (e.g. if `packages/data` failed, a dependent slice cannot proceed — abort it immediately with attempt count 1 and reference the blocker's error log).
+
+**Error log format — `errors/<id>-error.md`:**
+
+```markdown
+# Slice <id> — Abort Log
+
+**Slice:** <id> — <title>
+**Date:** <ISO date>
+**Attempts:** 5
+
+## Attempts summary
+
+### Attempt 1
+**Approach:** <brief description of what was tried>
+**Command(s) run:** <exact commands>
+**Error output:**
+\`\`\`
+<exact error text>
+\`\`\`
+
+### Attempt 2
+...
+
+## Root cause hypothesis
+
+<Best diagnosis of why the slice could not be completed>
+
+## Suggested next steps for a human
+
+<What a human would need to do to unblock this slice>
+```
 
 ## Parallel execution with sub-agents
 
@@ -26,9 +79,9 @@ Where multiple slices are eligible at the same time (no unresolved blockers), la
 
 1. Identify all slices where `passes: false` AND every ID in `blockedBy` is `passes: true`
 2. For each eligible slice, spawn a sub-agent with this instruction:
-   > "Read `CLAUDE.md` for project conventions. Read `issues/<id>-<title>.md` for the full spec. Implement the slice, run quality checks, commit with message `feat: slice <id> — <title>`, then report back with either SUCCESS or FAILURE and a summary."
-3. Wait for all sub-agents to complete before updating `prd.json` — mark each slice `passes: true` only on SUCCESS
-4. If a sub-agent reports FAILURE, do not mark it done; treat it as still `passes: false` and retry or escalate
+   > "Read `CLAUDE.md` for project conventions and the retry/abort protocol. Read `issues/<id>-<title>.md` for the full spec. Implement the slice. If quality checks fail, retry up to 5 attempts using different approaches before aborting. On SUCCESS: commit with message `feat: slice <id> — <title>` and report SUCCESS. On ABORT after 5 attempts: write `errors/<id>-error.md`, commit it, and report ABORTED with the error log path."
+3. Wait for all sub-agents to complete before updating `prd.json` — mark each slice `passes: true` on SUCCESS, `"aborted"` on ABORTED
+4. If a sub-agent reports FAILURE without having exhausted retries, that is a sub-agent error — relaunch it once before treating the slice as aborted
 
 **Parallelisation map for this project:**
 
