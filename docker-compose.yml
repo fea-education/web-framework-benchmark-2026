@@ -79,40 +79,39 @@ services:
       start_period: 15s
 
   nuxt:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/nuxt/Dockerfile
     ports:
-      - "3004:3004"
+      - "3004:3000"
     environment:
-      PORT: 3004
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3004;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'nuxt'}))}).listen(port,()=>console.log('nuxt stub listening on port '+port))"
+      NUXT_PUBLIC_API_BASE: http://api:3000
     networks:
       - benchmark-net
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3004/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 20s
 
   astro-vanilla:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/astro-vanilla/Dockerfile
     ports:
-      - "3005:3005"
-    environment:
-      PORT: 3005
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3005;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'astro-vanilla'}))}).listen(port,()=>console.log('astro-vanilla stub listening on port '+port))"
+      - "3005:3000"
     networks:
       - benchmark-net
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3005/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
   astro-solid:
     build:
@@ -130,22 +129,22 @@ services:
       start_period: 15s
 
   qwik:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/qwik/Dockerfile
     ports:
-      - "3007:3007"
-    environment:
-      PORT: 3007
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3007;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'qwik'}))}).listen(port,()=>console.log('qwik stub listening on port '+port))"
+      - "3007:3000"
     networks:
       - benchmark-net
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3007/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 20s
 
   solidstart:
     image: node:20-alpine
