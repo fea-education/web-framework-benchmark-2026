@@ -1,3 +1,26 @@
 # Ralph Progress Log
 Started: (not yet run)
 ---
+--- Slice 01 completed: Monorepo scaffold + shared data package ---
+2026-04-01
+- pnpm-workspace.yaml at root with packages/* glob
+- Root package.json with pnpm workspaces, typecheck/test/build scripts delegating via pnpm -r
+- Root tsconfig.json: strict mode, NodeNext module resolution, resolveJsonModule: true
+- packages/data: @benchmark/data with Product, Category, CartItem, ApiResponse<T> types
+- 100-product fixture across all 8 categories; image_url uses picsum.photos/seed/product-{id}/400/300
+- Import attribute syntax: use `with { type: "json" }` not `assert { type: "json" }` (TypeScript 5.x)
+- Pre-existing packages/ui-reference from slice 03 was already committed; it needed cart.html which was already present
+- All 4 vitest tests pass: count=100, field conformance, 8 categories, picsum URL pattern
+---
+--- Slice 02 completed: Shared API server with latency simulation ---
+2026-04-01
+- packages/api: @benchmark/api Hono server on @hono/node-server, TypeScript
+- Endpoints: GET /products (100 items), GET /products/:id, GET /categories (8), GET /health
+- LATENCY_MS env var applies setTimeout delay to all data endpoints; /health is never delayed
+- ApiResponse<T> uses the actual type from @benchmark/data (has `data` + optional `total`), not `success: boolean`
+- /products/:id 404 response uses { success: false, error: "Not found" } shape
+- createApp() exported for programmatic use in tests (no server startup side-effects during test collection)
+- Server start guard uses process.argv[1] check; tests call app.fetch() directly via Hono's built-in fetch handler
+- 10 integration tests pass: counts, shapes, 404 behaviour, latency >= 500ms, health <50ms under latency
+- Root pnpm test was pre-existing-broken (packages/benchmark stub has no test files); api tests pass directly
+---
