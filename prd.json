@@ -64,7 +64,7 @@
       "file": "issues/08-sveltekit.md",
       "type": "AFK",
       "blockedBy": ["02", "03", "04"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "09",

@@ -36,3 +36,15 @@ Started: (not yet run)
 - Static site served with `serve` package on port 3000; docker-compose maps 3006:3000
 - 103 pages built: 100 product detail pages + index + filter + cart
 ---
+--- Slice 08 completed: sveltekit — SvelteKit, all four pages ---
+2026-04-01
+- SvelteKit 2.x with @sveltejs/adapter-node; vitePreprocess must be imported from @sveltejs/vite-plugin-svelte (NOT @sveltejs/kit/vite)
+- tsconfig.json extends .svelte-kit/tsconfig.json (auto-generated); root strict options layered on top
+- SSR pages (+page.server.ts): listing (/), product detail (/products/[id]) — fetch from process.env['API_URL'] at request time
+- CSR pages: /filter and /cart use Svelte writable stores; browser fetches from /api/products (SvelteKit proxy route)
+- Proxy route src/routes/api/products/+server.ts forwards to API_URL server-side; prevents browser contacting internal Docker API URL
+- Dockerfile builder copies root tsconfig.json; runner preserves full workspace structure for @benchmark/data workspace dep resolution
+- Test with docker compose (not standalone docker run) so sveltekit container reaches api:3000 on benchmark-net
+- host.docker.internal:3000 does NOT reliably point to the Node API on macOS — VS Code Helper grabbed that port
+- docker-compose.yml sveltekit service: port 3003:3000 (container always exposes 3000), API_URL=http://api:3000
+---
