@@ -1,11 +1,11 @@
 #!/bin/bash
 # Ralph Wiggum - Long-running AI agent loop
-# Usage: ./scripts/ralph/ralph.sh [--tool amp|claude] [max_iterations]
+# Usage: ./scripts/ralph/ralph.sh [--tool amp|claude|opencode] [max_iterations]
 
 set -e
 
 # Parse arguments
-TOOL="claude"  # Default to claude for this project
+TOOL="opencode"  # Default to opencode for this project
 MAX_ITERATIONS=50
 
 while [[ $# -gt 0 ]]; do
@@ -29,8 +29,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate tool choice
-if [[ "$TOOL" != "amp" && "$TOOL" != "claude" ]]; then
-  echo "Error: Invalid tool '$TOOL'. Must be 'amp' or 'claude'."
+if [[ "$TOOL" != "amp" && "$TOOL" != "claude" && "$TOOL" != "opencode" ]]; then
+  echo "Error: Invalid tool '$TOOL'. Must be 'amp', 'claude', or 'opencode'."
   exit 1
 fi
 
@@ -90,9 +90,12 @@ for i in $(seq 1 $MAX_ITERATIONS); do
 
   if [[ "$TOOL" == "amp" ]]; then
     OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
-  else
+  elif [[ "$TOOL" == "claude" ]]; then
     # Claude Code: pipe the ralph CLAUDE.md as the prompt, run from repo root
     OUTPUT=$(claude --dangerously-skip-permissions --print < "$SCRIPT_DIR/CLAUDE.md" 2>&1 | tee /dev/stderr) || true
+  else
+    # OpenCode: run non-interactively with the ralph CLAUDE.md content as the prompt
+    OUTPUT=$(opencode run "$(cat "$SCRIPT_DIR/CLAUDE.md")" 2>&1 | tee /dev/stderr) || true
   fi
 
   # Check for completion signal
