@@ -1,4 +1,4 @@
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Layout from "@/components/Layout";
@@ -6,20 +6,20 @@ import type { Product, ApiResponse } from "@benchmark/data";
 
 const API_URL = process.env["API_URL"] ?? "http://localhost:3000";
 
-export const getServerSideProps = (async () => {
+export const getStaticProps = (async () => {
   try {
     const res = await fetch(`${API_URL}/products`);
-    if (!res.ok) return { props: { products: [] } };
+    if (!res.ok) return { props: { products: [] }, revalidate: 60 };
     const json = (await res.json()) as ApiResponse<Product[]>;
-    return { props: { products: json.data } };
+    return { props: { products: json.data }, revalidate: 60 };
   } catch {
-    return { props: { products: [] } };
+    return { props: { products: [] }, revalidate: 60 };
   }
-}) satisfies GetServerSideProps<{ products: Product[] }>;
+}) satisfies GetStaticProps<{ products: Product[] }>;
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
-export default function ProductsPage({ products }: Props) {
+export default function ProductListingPage({ products }: Props) {
   return (
     <Layout>
       <div className="flex items-center justify-between mb-6">
