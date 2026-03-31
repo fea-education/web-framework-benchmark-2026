@@ -36,7 +36,55 @@ Started: (not yet run)
 - Static site served with `serve` package on port 3000; docker-compose maps 3006:3000
 - 103 pages built: 100 product detail pages + index + filter + cart
 ---
---- Slice 08 completed: sveltekit — SvelteKit, all four pages ---
+--- Slice 10 completed: astro-vanilla — Astro with zero client-side framework, all four pages ---
+2026-04-01
+- Static output (output: 'static') with @tailwindcss/vite plugin
+- passthroughImageService() required (same as astro-solid) — picsum.photos URLs redirect and Astro's default image pipeline rejects them
+- All data from @benchmark/data static import — API not available at Docker build time
+- Listing page: SSG with static products grid; Product detail: getStaticPaths() from static data
+- Filter page: vanilla JS <script define:vars={{ productsJson, minPrice, maxPrice }}> for client-side filtering
+- Cart page: vanilla JS localStorage-based cart with inline <script> TypeScript
+- Static site served with `serve` on port 3000; docker-compose maps 3005:3000
+- 103 pages built: 100 product detail + index + filter + cart
+---
+--- Slice 07 completed: nextjs-pages — Next.js Pages Router, all four pages ---
+2026-04-01
+- Next.js Pages Router with output: 'standalone' in next.config.ts
+- Listing page: getStaticProps (SSG) from @benchmark/data
+- Product detail: getStaticPaths + getStaticProps from @benchmark/data
+- Filter page: CSR with useState/useMemo; product data passed as initialProducts prop from getStaticProps
+- Cart page: CSR with useState; localStorage-based cart
+- next/image used for product images
+- Docker: multi-stage build, copies .next/standalone + .next/static + public; node server.js
+- docker-compose maps 3002:3000 with API_URL env var
+---
+--- Slice 09 completed: nuxt — Nuxt 3, all four pages ---
+2026-04-01
+- Nuxt 3 with @nuxt/image, nitro node-server preset
+- Listing + detail pages: prerender via defineRouteRules; products from @benchmark/data static import
+- Filter + cart pages: definePageMeta({ ssr: false }) for CSR; Vue refs and computed
+- @tailwindcss/vite plugin in nuxt.config.ts vite.plugins
+- Docker: multi-stage, node .output/server/index.mjs; port 3000
+- docker-compose maps 3004:3000, NUXT_PUBLIC_API_BASE=http://api:3000
+---
+--- Slice 12 completed: qwik — QwikCity, all four pages ---
+2026-04-01
+- QwikCity with express adapter for Node; static data from @benchmark/data
+- Listing + detail pages: SSR via routeLoader$ or direct import of static products
+- Filter + cart pages: CSR with useSignal/useStore
+- @tailwindcss/vite in vite.config.ts
+- Docker: multi-stage build; node dist/server/entry.express or equivalent
+- docker-compose maps 3007:3000
+---
+--- Slice 13 completed: solidstart — SolidStart, all four pages ---
+2026-04-01
+- SolidStart with vinxi/nitro node-server preset
+- Listing + detail pages: static data from @benchmark/data, SSR via createAsync/cache
+- Filter + cart pages: CSR with createSignal/createStore
+- @tailwindcss/vite in app.config.ts vite config
+- Docker: multi-stage build; node .output/server/index.mjs
+- docker-compose maps 3008:3000
+---
 2026-04-01
 - SvelteKit 2.x with @sveltejs/adapter-node; vitePreprocess must be imported from @sveltejs/vite-plugin-svelte (NOT @sveltejs/kit/vite)
 - tsconfig.json extends .svelte-kit/tsconfig.json (auto-generated); root strict options layered on top

@@ -134,6 +134,8 @@ services:
       dockerfile: packages/qwik/Dockerfile
     ports:
       - "3007:3000"
+    environment:
+      VITE_API_URL: http://api:3000
     networks:
       - benchmark-net
     depends_on:
@@ -147,22 +149,24 @@ services:
       start_period: 20s
 
   solidstart:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/solidstart/Dockerfile
     ports:
-      - "3008:3008"
+      - "3008:3000"
     environment:
-      PORT: 3008
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3008;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'solidstart'}))}).listen(port,()=>console.log('solidstart stub listening on port '+port))"
+      VITE_API_URL: http://api:3000
     networks:
       - benchmark-net
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3008/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 20s
 
   # ── Benchmark runner placeholder (will be implemented in slice 14) ───────────
   benchmark:
