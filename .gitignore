@@ -137,3 +137,16 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# SolidStart / Vinxi build output
+.output/
+.vinxi/
+
+# Qwik / framework build artifacts
+packages/*/server/
+packages/*/dist/
+packages/*/.svelte-kit/
+packages/*/.next/
+packages/*/.nuxt/
+packages/*/.output/
+packages/*/.vinxi/
