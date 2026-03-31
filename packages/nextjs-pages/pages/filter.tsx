@@ -1,12 +1,8 @@
-"use client";
-
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Layout from "@/components/Layout";
 import type { Product, Category, ApiResponse } from "@benchmark/data";
-
-const API_URL = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3000";
 
 const CATEGORIES: Category[] = [
   "Electronics",
@@ -31,7 +27,7 @@ export default function FilterPage() {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const res = await fetch(`${API_URL}/products`);
+        const res = await fetch(`/api/products`);
         const json = (await res.json()) as ApiResponse<Product[]>;
         setProducts(json.data);
       } catch (err) {
