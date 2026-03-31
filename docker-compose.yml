@@ -17,60 +17,66 @@ services:
       retries: 5
       start_period: 15s
 
-  # ── Framework app stubs (will be replaced in Wave 4) ────────────────────────
+  # ── Framework apps ─────────────────────────────────────────────────────────
   nextjs-app:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/nextjs-app/Dockerfile
     ports:
-      - "3001:3001"
+      - "3001:3000"
     environment:
-      PORT: 3001
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3001;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'nextjs-app'}))}).listen(port,()=>console.log('nextjs-app stub listening on port '+port))"
+      API_URL: http://api:3000
     networks:
       - benchmark-net
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
   nextjs-pages:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/nextjs-pages/Dockerfile
     ports:
-      - "3002:3002"
+      - "3002:3000"
     environment:
-      PORT: 3002
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3002;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'nextjs-pages'}))}).listen(port,()=>console.log('nextjs-pages stub listening on port '+port))"
+      API_URL: http://api:3000
     networks:
       - benchmark-net
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3002/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
   sveltekit:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/sveltekit/Dockerfile
     ports:
-      - "3003:3003"
+      - "3003:3000"
     environment:
-      PORT: 3003
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3003;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'sveltekit'}))}).listen(port,()=>console.log('sveltekit stub listening on port '+port))"
+      API_URL: http://api:3000
     networks:
       - benchmark-net
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3003/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
   nuxt:
     image: node:20-alpine
@@ -109,22 +115,19 @@ services:
       retries: 3
 
   astro-solid:
-    image: node:20-alpine
+    build:
+      context: .
+      dockerfile: packages/astro-solid/Dockerfile
     ports:
-      - "3006:3006"
-    environment:
-      PORT: 3006
-    command: >
-      node -e "const http=require('http');const port=process.env.PORT||3006;
-      http.createServer((req,res)=>{res.writeHead(200,{'Content-Type':'application/json'});
-      res.end(JSON.stringify({status:'ok',stub:true,service:'astro-solid'}))}).listen(port,()=>console.log('astro-solid stub listening on port '+port))"
+      - "3006:3000"
     networks:
       - benchmark-net
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3006/ || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
   qwik:
     image: node:20-alpine

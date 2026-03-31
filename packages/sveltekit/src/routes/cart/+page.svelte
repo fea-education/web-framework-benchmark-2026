@@ -1,0 +1,174 @@
+<script lang="ts">
+  import { writable, derived } from 'svelte/store';
+  import type { CartItem, Product, ApiResponse } from '@benchmark/data';
+  import { onMount } from 'svelte';
+
+  // Use the SvelteKit proxy route so browser doesn't need direct API access
+  const apiUrl = '/api';
+
+  // Cart store: map from product id to CartItem
+  const cartItems = writable<CartItem[]>([]);
+
+  // Derived total
+  const cartTotal = derived(cartItems, ($items) =>
+    $items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+  );
+
+  const cartCount = derived(cartItems, ($items) =>
+    $items.reduce((sum, item) => sum + item.quantity, 0)
+  );
+
+  // All products for "add to cart" demo
+  const products = writable<Product[]>([]);
+  const loading = writable(true);
+
+  onMount(async () => {
+    try {
+      const res = await fetch(`${apiUrl}/products`);
+      const json: ApiResponse<Product[]> = await res.json() as ApiResponse<Product[]>;
+      products.set(json.data.slice(0, 12));
+    } finally {
+      loading.set(false);
+    }
+  });
+
+  function addToCart(product: Product) {
+    cartItems.update((items) => {
+      const existing = items.find((i) => i.product.id === product.id);
+      if (existing) {
+        return items.map((i) =>
+          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
+        );
+      }
+      return [...items, { product, quantity: 1 }];
+    });
+  }
+
+  function removeFromCart(productId: number) {
+    cartItems.update((items) => items.filter((i) => i.product.id !== productId));
+  }
+
+  function updateQuantity(productId: number, delta: number) {
+    cartItems.update((items) => {
+      return items
+        .map((i) => (i.product.id === productId ? { ...i, quantity: i.quantity + delta } : i))
+        .filter((i) => i.quantity > 0);
+    });
+  }
+</script>
+
+<svelte:head>
+  <title>Cart — Benchmark Shop</title>
+</svelte:head>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Cart items -->
+    <div class="flex-1">
+      {#if $cartItems.length === 0}
+        <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+          <p class="text-gray-400 text-lg mb-4">Your cart is empty</p>
+          <a href="/" class="text-blue-600 hover:underline">Browse products</a>
+        </div>
+      {:else}
+        <div class="space-y-4">
+          {#each $cartItems as item (item.product.id)}
+            <div class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4">
+              <img
+                src={item.product.image_url}
+                alt={item.product.name}
+                width="80"
+                height="80"
+                class="w-20 h-20 object-cover rounded-lg"
+              />
+              <div class="flex-1">
+                <h3 class="font-semibold text-gray-900">{item.product.name}</h3>
+                <p class="text-sm text-gray-500">{item.product.category}</p>
+                <p class="text-blue-600 font-bold">${item.product.price.toFixed(2)}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  onclick={() => updateQuantity(item.product.id, -1)}
+                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                >
+                  -
+                </button>
+                <span class="w-8 text-center font-semibold">{item.quantity}</span>
+                <button
+                  onclick={() => updateQuantity(item.product.id, 1)}
+                  class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                onclick={() => removeFromCart(item.product.id)}
+                class="text-red-500 hover:text-red-700 text-sm font-medium ml-2 transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+          {/each}
+        </div>
+      {/if}
+
+      <!-- Add products section -->
+      <div class="mt-10">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Add Products</h2>
+        {#if $loading}
+          <p class="text-gray-400">Loading…</p>
+        {:else}
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {#each $products as product (product.id)}
+              <button
+                onclick={() => addToCart(product)}
+                class="bg-white rounded-lg shadow-sm p-3 text-left hover:shadow-md transition-shadow"
+              >
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  width="200"
+                  height="150"
+                  class="w-full h-28 object-cover rounded-md mb-2"
+                  loading="lazy"
+                />
+                <p class="text-xs font-medium text-gray-800 line-clamp-2">{product.name}</p>
+                <p class="text-xs text-blue-600 font-semibold mt-1">${product.price.toFixed(2)}</p>
+              </button>
+            {/each}
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <!-- Order summary -->
+    <div class="lg:w-72">
+      <div class="bg-white rounded-xl shadow-sm p-5 sticky top-4">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Order Summary</h2>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between text-gray-600">
+            <span>Items ({$cartCount})</span>
+            <span>${$cartTotal.toFixed(2)}</span>
+          </div>
+          <div class="flex justify-between text-gray-600">
+            <span>Shipping</span>
+            <span class="text-green-600">Free</span>
+          </div>
+          <hr class="my-2" />
+          <div class="flex justify-between font-bold text-gray-900 text-base">
+            <span>Total</span>
+            <span>${$cartTotal.toFixed(2)}</span>
+          </div>
+        </div>
+        <button
+          disabled={$cartItems.length === 0}
+          class="mt-5 w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-colors"
+        >
+          Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
