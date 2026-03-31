@@ -1,0 +1,117 @@
+{
+  "branchName": "web-framework-benchmark-2026",
+  "userStories": [
+    {
+      "id": "01",
+      "title": "Monorepo scaffold + shared data package",
+      "file": "issues/01-monorepo-scaffold-shared-data.md",
+      "type": "AFK",
+      "blockedBy": [],
+      "passes": false
+    },
+    {
+      "id": "02",
+      "title": "Shared API server with latency simulation",
+      "file": "issues/02-shared-api-latency.md",
+      "type": "AFK",
+      "blockedBy": ["01"],
+      "passes": false
+    },
+    {
+      "id": "03",
+      "title": "Shared Tailwind v4 base config + page layout reference",
+      "file": "issues/03-tailwind-base-config.md",
+      "type": "AFK",
+      "blockedBy": [],
+      "passes": false
+    },
+    {
+      "id": "04",
+      "title": "Docker Compose orchestration skeleton",
+      "file": "issues/04-docker-compose-skeleton.md",
+      "type": "AFK",
+      "blockedBy": ["02"],
+      "passes": false
+    },
+    {
+      "id": "05",
+      "title": "Benchmark runner — aggregation, median logic, and Markdown output",
+      "file": "issues/05-benchmark-runner-aggregation.md",
+      "type": "AFK",
+      "blockedBy": ["01"],
+      "passes": false
+    },
+    {
+      "id": "06",
+      "title": "nextjs-app — Next.js App Router, all four pages",
+      "file": "issues/06-nextjs-app.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "07",
+      "title": "nextjs-pages — Next.js Pages Router, all four pages",
+      "file": "issues/07-nextjs-pages.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "08",
+      "title": "sveltekit — SvelteKit, all four pages",
+      "file": "issues/08-sveltekit.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "09",
+      "title": "nuxt — Nuxt 3, all four pages",
+      "file": "issues/09-nuxt.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "10",
+      "title": "astro-vanilla — Astro with zero client-side framework, all four pages",
+      "file": "issues/10-astro-vanilla.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "11",
+      "title": "astro-solid — Astro with SolidJS islands, all four pages",
+      "file": "issues/11-astro-solid.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "12",
+      "title": "qwik — QwikCity, all four pages",
+      "file": "issues/12-qwik.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "13",
+      "title": "solidstart — SolidStart, all four pages",
+      "file": "issues/13-solidstart.md",
+      "type": "AFK",
+      "blockedBy": ["02", "03", "04"],
+      "passes": false
+    },
+    {
+      "id": "14",
+      "title": "Benchmark runner — Playwright + Lighthouse wiring and full suite execution",
+      "file": "issues/14-benchmark-runner-playwright-lighthouse.md",
+      "type": "AFK",
+      "blockedBy": ["05", "06", "07", "08", "09", "10", "11", "12", "13"],
+      "passes": false
+    }
+  ]
+}
