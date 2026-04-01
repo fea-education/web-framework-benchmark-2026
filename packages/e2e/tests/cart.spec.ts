@@ -51,12 +51,14 @@ test.describe("Cart page — after adding a product", () => {
 
     await test.step("Setup: click Add to Cart and wait for feedback", async () => {
       await page.getByRole("button", { name: /add to cart/i }).click();
-      // Wait for visible feedback: either a feedback text or cart count updating
-      await Promise.race([
-        page.getByText(/added to cart|item added|in your cart/i).waitFor({ state: "visible", timeout: 5000 }).catch(() => null),
-        page.getByRole("link", { name: /cart.*[1-9]|[1-9].*cart/i }).waitFor({ state: "visible", timeout: 5000 }).catch(() => null),
-        // Fallback: just wait a moment for state to settle
-        page.waitForTimeout(1500),
+      // Both feedback text AND cart count update must occur
+      await Promise.all([
+        page
+          .getByText(/added to cart|item added|in your cart/i)
+          .waitFor({ state: "visible", timeout: 5000 }),
+        page
+          .getByRole("link", { name: /cart.*[1-9]|[1-9].*cart/i })
+          .waitFor({ state: "visible", timeout: 5000 }),
       ]);
     });
 
@@ -72,7 +74,9 @@ test.describe("Cart page — after adding a product", () => {
     // C5: A quantity control is visible for the cart item
     await test.step("C5: quantity control is visible", async () => {
       const spinbutton = page.getByRole("spinbutton");
-      const incrementBtn = page.getByRole("button", { name: /increase|increment|\+/i });
+      const incrementBtn = page.getByRole("button", {
+        name: /increase|increment|\+/i,
+      });
       const hasSpinbutton = (await spinbutton.count()) > 0;
       const hasIncrementBtn = (await incrementBtn.count()) > 0;
       expect(hasSpinbutton || hasIncrementBtn).toBe(true);
@@ -92,13 +96,20 @@ test.describe("Cart page — after adding a product", () => {
         await spinbutton.fill("2");
         await expect(spinbutton).toHaveValue("2");
       } else {
-        const incrementBtn = page.getByRole("button", { name: /increase|increment|\+/i }).first();
+        const incrementBtn = page
+          .getByRole("button", { name: /increase|increment|\+/i })
+          .first();
         // Read current quantity before incrementing
-        const beforeText = await page.locator('[role="article"], [role="listitem"]').first().textContent();
+        const beforeText = await page
+          .locator('[role="article"], [role="listitem"]')
+          .first()
+          .textContent();
         await incrementBtn.click();
         // After clicking increment, quantity should change — assert the page
         // now shows "2" somewhere in the cart item context
-        const cartItem = page.locator('[role="article"], [role="listitem"]').first();
+        const cartItem = page
+          .locator('[role="article"], [role="listitem"]')
+          .first();
         await expect(cartItem).toContainText("2");
         // Ensure it changed from whatever was before (sanity: before text should not have been "2" already)
         const afterText = await cartItem.textContent();
@@ -108,13 +119,21 @@ test.describe("Cart page — after adding a product", () => {
 
     // C7: Clicking remove/delete removes the item (waits for DOM detach)
     await test.step("C7: remove button removes the cart item from DOM", async () => {
-      const cartItem = page.locator('[role="article"], [role="listitem"]').first();
-      const removeBtn = page.getByRole("button", { name: /remove|delete/i }).first();
+      const cartItem = page
+        .locator('[role="article"], [role="listitem"]')
+        .first();
+      const removeBtn = page
+        .getByRole("button", { name: /remove|delete/i })
+        .first();
       await expect(removeBtn).toBeVisible();
       await removeBtn.click();
       // Wait for the item to detach from DOM (not just hidden)
-      await expect(cartItem).toBeHidden({ timeout: 5000 }).catch(() => null);
-      await expect(page.locator('[role="article"]')).toHaveCount(0, { timeout: 5000 });
+      await expect(cartItem)
+        .toBeHidden({ timeout: 5000 })
+        .catch(() => null);
+      await expect(page.locator('[role="article"]')).toHaveCount(0, {
+        timeout: 5000,
+      });
     });
 
     // C8: After removing the only item, the empty cart message reappears

@@ -30,55 +30,39 @@ test.describe("Product listing page", () => {
     });
 
     // L4: Each visible card contains a price string matching /$[\d,.]+/
-    await test.step(
-      "L4: first 3 cards each contain a price (/$[\\d,.]+/)",
-      async () => {
-        for (let i = 0; i < cardCount; i++) {
-          const card = cards.nth(i);
-          const price = card.getByText(/\$[\d,.]+/);
-          await expect(price).toBeVisible();
-        }
+    await test.step("L4: first 3 cards each contain a price (/$[\\d,.]+/)", async () => {
+      for (let i = 0; i < cardCount; i++) {
+        const card = cards.nth(i);
+        const price = card.getByText(/\$[\d,.]+/);
+        await expect(price).toBeVisible();
       }
-    );
+    });
 
     // L5: Each card has a link whose href contains /products/
-    await test.step(
-      "L5: first 3 cards each have a link to /products/",
-      async () => {
-        for (let i = 0; i < cardCount; i++) {
-          const card = cards.nth(i);
-          const link = card.getByRole("link");
-          await expect(link).toHaveAttribute("href", /\/products\//);
-        }
+    await test.step("L5: first 3 cards each have a link to /products/", async () => {
+      for (let i = 0; i < cardCount; i++) {
+        const card = cards.nth(i);
+        const link = card.getByRole("link");
+        await expect(link).toHaveAttribute("href", /\/products\//);
       }
-    );
+    });
 
     // L6: Navigation contains a link matching /cart/i
     await test.step("L6: navigation contains a cart link", async () => {
-      await expect(
-        page.getByRole("link", { name: /cart/i })
-      ).toBeVisible();
+      await expect(page.getByRole("link", { name: /cart/i })).toBeVisible();
     });
 
     // L7: Page does NOT show empty-cart text
-    await test.step(
-      "L7: listing page does not show empty-cart text",
-      async () => {
-        await expect(
-          page.getByText(/your cart is empty/i)
-        ).not.toBeVisible();
-      }
-    );
+    await test.step("L7: listing page does not show empty-cart text", async () => {
+      await expect(page.getByText(/your cart is empty/i)).not.toBeVisible();
+    });
 
     // L8: Clicking the first product card link navigates to a /products/ URL
-    await test.step(
-      "L8: clicking first product link navigates to /products/ URL",
-      async () => {
-        const firstCard = cards.first();
-        const firstLink = firstCard.getByRole("link");
-        await firstLink.click();
-        await expect(page).toHaveURL(/\/products\//);
-      }
-    );
+    await test.step("L8: clicking first product link navigates to /products/ URL", async () => {
+      const firstCard = cards.first();
+      const firstLink = firstCard.getByRole("link");
+      await firstLink.click();
+      await expect(page).toHaveURL(/\/products\//);
+    });
   });
 });
