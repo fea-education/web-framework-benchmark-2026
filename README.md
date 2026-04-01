@@ -94,3 +94,70 @@ pnpm test
 # Build all packages
 pnpm build
 ```
+
+## Agentic implementation with Ralph
+
+Ralph is a long-running AI agent loop that autonomously implements a PRD slice by slice. Each implementation lives under `implementations/<NN-slug>/` with its own spec, state tracker, and learnings log. The two-digit prefix makes the iteration history visible at a glance.
+
+### Folder structure of an implementation
+
+```
+implementations/
+  01-web-framework-benchmark-2026/   ← first implementation
+    CLAUDE.md       ← agent resume protocol (retry/abort/parallelisation rules)
+    prd.md          ← full product spec
+    prd.json        ← slice state tracker (passes: true / false / "aborted")
+    progress.txt    ← append-only learnings log
+    issues/         ← one .md file per slice with the full acceptance criteria
+    errors/         ← abort logs written by the agent (runtime-generated)
+  02-my-next-idea/                   ← future implementation
+    ...
+```
+
+### Planning a new implementation
+
+1. Create the directory with the next two-digit prefix:
+   ```bash
+   mkdir implementations/02-my-next-idea
+   ```
+
+2. Write `prd.md` — the full product spec (user stories, implementation decisions, out of scope).
+
+3. Write `prd.json` — the slice state tracker. Each slice needs an `id`, `title`, `file` path, `type`, `blockedBy` array, and `passes: false`:
+   ```json
+   {
+     "branchName": "my-next-idea",
+     "userStories": [
+       { "id": "01", "title": "...", "file": "issues/01-....md", "type": "AFK", "blockedBy": [], "passes": false },
+       { "id": "02", "title": "...", "file": "issues/02-....md", "type": "AFK", "blockedBy": ["01"], "passes": false }
+     ]
+   }
+   ```
+
+4. Write one `issues/<id>-<slug>.md` file per slice with the full acceptance criteria and implementation notes.
+
+5. Create `progress.txt` with the standard header:
+   ```
+   # Ralph Progress Log
+   Started: (not yet run)
+   ---
+   ```
+
+6. Copy `implementations/01-web-framework-benchmark-2026/CLAUDE.md` as a starting point and update all path references from `01-web-framework-benchmark-2026` to `02-my-next-idea`.
+
+### Running an implementation
+
+```bash
+# Via Make (recommended)
+make implement IMPL=01-web-framework-benchmark-2026
+
+# Directly via ralph.sh
+./scripts/ralph/ralph.sh --impl 01-web-framework-benchmark-2026
+
+# Choose a specific AI tool (opencode is the default)
+./scripts/ralph/ralph.sh --impl 01-web-framework-benchmark-2026 --tool claude 20
+```
+
+Ralph loops until every slice in `prd.json` is either `passes: true` or `"aborted"`, or until the iteration limit is reached. It resumes cleanly from wherever it left off — re-running the same command is safe.
+
+The `scripts/ralph/.last-branch-<NN-slug>` file is committed alongside each implementation and records the last-seen `branchName` from `prd.json`. This lets Ralph detect when a new implementation starts on any machine and archive the previous run's state automatically.
