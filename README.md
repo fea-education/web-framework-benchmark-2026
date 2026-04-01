@@ -157,14 +157,14 @@ Please create the following three files:
    - Update the parallelisation map table if the wave/dependency structure differs from the original
 ```
 
-#### Step 4 — Commit the tracking file
-
-After the scaffold is in place, run ralph once briefly to generate the `.last-branch` file, then commit it:
+#### Step 4 — Commit the scaffold
 
 ```bash
-git add implementations/<NN-slug>/ scripts/ralph/.last-branch-<NN-slug>
+git add implementations/<NN-slug>/
 git commit -m "chore: scaffold implementation <NN-slug>"
 ```
+
+The `scripts/ralph/.last-branch-<NN-slug>` tracking file is written automatically on the first ralph run. Include it in the commit for the first completed slice so the implementation state is resumable on any machine from that point forward.
 
 ### Running an implementation
 
