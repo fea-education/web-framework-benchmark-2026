@@ -116,34 +116,55 @@ implementations/
 
 ### Planning a new implementation
 
-1. Create the directory with the next two-digit prefix:
-   ```bash
-   mkdir implementations/02-my-next-idea
-   ```
+#### Step 1 — Write the PRD (`prd.md`)
 
-2. Write `prd.md` — the full product spec (user stories, implementation decisions, out of scope).
+Use the **`write-a-prd`** skill in your AI assistant to produce a structured PRD through an interview-driven process. The result should include user stories, implementation decisions, and an out-of-scope section.
 
-3. Write `prd.json` — the slice state tracker. Each slice needs an `id`, `title`, `file` path, `type`, `blockedBy` array, and `passes: false`:
-   ```json
-   {
-     "branchName": "my-next-idea",
-     "userStories": [
-       { "id": "01", "title": "...", "file": "issues/01-....md", "type": "AFK", "blockedBy": [], "passes": false },
-       { "id": "02", "title": "...", "file": "issues/02-....md", "type": "AFK", "blockedBy": ["01"], "passes": false }
-     ]
-   }
-   ```
+Save the output as `implementations/<NN-slug>/prd.md`.
 
-4. Write one `issues/<id>-<slug>.md` file per slice with the full acceptance criteria and implementation notes.
+#### Step 2 — Break the PRD into issues (`issues/`)
 
-5. Create `progress.txt` with the standard header:
-   ```
-   # Ralph Progress Log
-   Started: (not yet run)
-   ---
-   ```
+Use the **`prd-to-issues`** skill to decompose the PRD into independently-deliverable slices using tracer-bullet vertical slices. Each slice becomes one file in `issues/<id>-<slug>.md` with full acceptance criteria and implementation notes.
 
-6. Copy `implementations/01-web-framework-benchmark-2026/CLAUDE.md` as a starting point and update all path references from `01-web-framework-benchmark-2026` to `02-my-next-idea`.
+#### Step 3 — Bootstrap the implementation scaffold
+
+Create the directory and paste the following prompt into your AI assistant to generate `prd.json`, `progress.txt`, and `CLAUDE.md` in one shot:
+
+```
+I have a new Ralph implementation at implementations/<NN-slug>/ (replace with the actual path).
+It already contains prd.md and an issues/ directory with numbered slice files.
+
+Please create the following three files:
+
+1. implementations/<NN-slug>/prd.json
+   - Read prd.md and the issues/ files to determine the slices
+   - Set "branchName" to "<slug>" (without the NN- prefix)
+   - Each entry needs: id (two-digit string), title, file (relative path to the issues file),
+     type ("AFK"), blockedBy (array of id strings), passes (false)
+   - Infer blockedBy from logical dependencies between slices
+   - Format must match implementations/01-web-framework-benchmark-2026/prd.json exactly
+
+2. implementations/<NN-slug>/progress.txt
+   - Exactly these three lines:
+     # Ralph Progress Log
+     Started: (not yet run)
+     ---
+
+3. implementations/<NN-slug>/CLAUDE.md
+   - Copy implementations/01-web-framework-benchmark-2026/CLAUDE.md
+   - Replace every occurrence of "01-web-framework-benchmark-2026" with "<NN-slug>"
+   - Update the "What this implementation is" section to describe this implementation
+   - Update the parallelisation map table if the wave/dependency structure differs from the original
+```
+
+#### Step 4 — Commit the tracking file
+
+After the scaffold is in place, run ralph once briefly to generate the `.last-branch` file, then commit it:
+
+```bash
+git add implementations/<NN-slug>/ scripts/ralph/.last-branch-<NN-slug>
+git commit -m "chore: scaffold implementation <NN-slug>"
+```
 
 ### Running an implementation
 
