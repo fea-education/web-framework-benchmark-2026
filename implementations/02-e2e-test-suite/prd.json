@@ -4,49 +4,49 @@
       "id": "01",
       "title": "packages/e2e scaffold — package.json, tsconfig.json, playwright.config.ts",
       "blockedBy": [],
-      "passes": false
+      "passes": true
     },
     {
       "id": "02",
       "title": "listing.spec.ts — product listing page assertions (L1–L8)",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "03",
       "title": "detail.spec.ts — product detail page assertions (D1–D7)",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "04",
       "title": "filter.spec.ts — filter page assertions (F1–F6)",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "05",
       "title": "cart.spec.ts — cart page assertions (C1–C8)",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "06",
       "title": "packages/e2e Dockerfile + docker-compose.yml e2e service + per-app profiles",
       "blockedBy": ["01"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "07",
       "title": "Makefile targets for all execution modes",
       "blockedBy": ["06"],
-      "passes": false
+      "passes": true
     },
     {
       "id": "08",
       "title": "Docker Compose apps profile applied to all 8 framework app services",
       "blockedBy": ["06"],
-      "passes": false
+      "passes": true
     }
   ]
 }

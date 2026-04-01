@@ -1,3 +1,57 @@
 # Ralph Progress Log
 Started: (not yet run)
 ---
+--- Slice 01 completed: packages/e2e scaffold — package.json, tsconfig.json, playwright.config.ts ---
+2026-04-01
+- Added @types/node to devDependencies for process.env access in playwright.config.ts
+- Used --pass-with-no-tests in test script so `pnpm test --list` exits 0 with no spec files
+- pnpm exec playwright test --list (bypassing script) still exits 1 on no tests; acceptable since issue spec uses `pnpm test --list`
+- tsconfig: added "types": ["node"] and "lib": ["ES2022"] to override root strict settings for node globals
+---
+--- Slice 02 completed: listing.spec.ts — product listing page assertions (L1–L8) ---
+2026-04-01
+- All 8 assertions (L1–L8) implemented using ARIA/role/text selectors only
+- Checks first 3 cards only for L3–L5 to avoid timeouts on slow apps
+- L2 catches Nuxt API loading bug; L7 catches SvelteKit page-mixing bug; L8 catches Astro Solid routing bug
+---
+--- Slice 03 completed: detail.spec.ts — product detail page assertions (D1–D7) ---
+2026-04-01
+- Dynamic navigation: resolves first product URL from listing page, not hard-coded
+- D1 uses waitForResponse for the /products/ navigation response
+- D6 uses .or() logic between feedback text and nav cart count locator
+- D5 catches Astro Vanilla redirect-on-add bug; D4 catches SolidStart missing button bug
+---
+--- Slice 04 completed: filter.spec.ts — filter page assertions (F1–F6) ---
+2026-04-01
+- F3 tries combobox first, falls back to listbox/radiogroup
+- F4 uses dynamic count comparison (filteredCount < initialCount), not hard-coded values
+- F6 navigates back to /filter to reset state before testing price range
+- Page must be waited on for the first card to appear after navigation reset
+---
+--- Slice 05 completed: cart.spec.ts — cart page assertions (C1–C8) ---
+2026-04-01
+- Two isolated test groups using test.use({ storageState: undefined })
+- Setup group 2 uses Promise.race for cart feedback detection with fallback timeout
+- C7 waits for DOM detach via toHaveCount(0) rather than just visibility
+- C3 asserts [role="article"] count equals 0 (not text-based) per spec
+---
+--- Slice 06 completed: packages/e2e Dockerfile + docker-compose.yml e2e service + per-app profiles ---
+2026-04-01
+- Dockerfile: two-stage (builder runs typecheck, runner installs Chromium via npx playwright install --with-deps)
+- docker-compose.yml: added e2e + 8 per-app e2e services; also added profiles to all existing services
+- Slices 06 and 08 were committed together since they both modify docker-compose.yml
+- `docker compose config` (no profile) now returns nothing — all services require a named profile
+---
+--- Slice 07 completed: Makefile targets for all execution modes ---
+2026-04-01
+- Used backslash-escaped colons (test\:e2e) in both .PHONY declaration and target definition for GNU Make compatibility
+- `make --dry-run 'test:e2e'` works correctly with this approach
+- Added test:e2e script to root package.json pointing to pnpm --filter @benchmark/e2e test
+---
+--- Slice 08 completed: Docker Compose apps profile applied to all 8 framework app services ---
+2026-04-01
+- Already applied as part of slice 06 commit (docker-compose.yml profiles for all existing services)
+- Verified: `docker compose --profile apps config` shows api + 8 apps, no e2e/benchmark services
+- Verified: `docker compose config` (no profile) returns zero services — all require a profile
+---
+
