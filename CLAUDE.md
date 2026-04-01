@@ -4,7 +4,7 @@
 
 A pnpm workspaces monorepo containing eight optimally-implemented e-commerce applications (one per framework variant), a shared Hono API, a shared data package, and an automated Playwright + Lighthouse benchmark runner. The goal is reproducible, side-by-side performance comparison across SSG, SSR, and CSR rendering modes under controlled latency conditions.
 
-Full spec: `docs/01-prd.md`
+Full spec: `prd.md`
 
 ## How to resume after a context reset
 
