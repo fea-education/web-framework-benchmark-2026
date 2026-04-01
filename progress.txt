@@ -96,3 +96,14 @@ Started: (not yet run)
 - host.docker.internal:3000 does NOT reliably point to the Node API on macOS — VS Code Helper grabbed that port
 - docker-compose.yml sveltekit service: port 3003:3000 (container always exposes 3000), API_URL=http://api:3000
 ---
+--- Slice 14 completed: Benchmark runner — Playwright + Lighthouse wiring and full suite execution ---
+2026-04-01
+- packages/benchmark extended with runner.ts, devices.ts, matrix.ts; playwright + lighthouse added as dependencies
+- Lighthouse connects to Playwright-launched Chromium via --remote-debugging-port (random port 9222–9322 to avoid collisions)
+- Browser.wsEndpoint() does NOT exist on Playwright's Browser type; use a fixed/random port arg instead
+- App base URLs resolved via APP_BASE_<name> env vars so runner works both locally (localhost:<port>) and inside Docker (http://<service>:3000)
+- RESULTS_DIR env var allows the Docker container to write to /results (volume-mounted from host ./results/)
+- docker-compose.yml benchmark service: depends on all 8 framework apps being healthy before runner starts
+- Dockerfile: two-stage (builder + runner); playwright install chromium --with-deps installs all system deps
+- All 24 existing tests continue to pass; typecheck and build clean
+---

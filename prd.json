@@ -112,7 +112,7 @@
       "file": "issues/14-benchmark-runner-playwright-lighthouse.md",
       "type": "AFK",
       "blockedBy": ["05", "06", "07", "08", "09", "10", "11", "12", "13"],
-      "passes": false
+      "passes": true
     }
   ]
 }
