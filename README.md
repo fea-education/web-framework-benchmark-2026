@@ -2,6 +2,18 @@
 
 A reproducible, side-by-side performance comparison of eight modern web framework variants (SSG, SSR, and CSR rendering modes) under controlled latency conditions.
 
+## Table of contents
+
+- [Frameworks compared](#frameworks-compared)
+- [Quick start](#quick-start)
+- [Running the benchmark suite](#running-the-benchmark-suite)
+- [Running the E2E functional test suite](#running-the-e2e-functional-test-suite)
+- [API endpoints](#api-endpoints)
+- [Simulating network latency](#simulating-network-latency)
+- [Running a single service](#running-a-single-service)
+- [Development](#development)
+- [Agentic implementation with Ralph](#agentic-implementation-with-ralph)
+
 ## Frameworks compared
 
 | Service | Framework | Port |
@@ -43,6 +55,72 @@ The benchmark runner:
 3. Runs Lighthouse 3 times per (app × page × latency × device) combination
 4. Computes median LCP, FCP, TBT, INP, CLS, TTFB, performance score, and JS bundle size
 5. Outputs a Markdown summary table including the rendering mode per page (from each app's `STRATEGY.md`)
+
+## Running the E2E functional test suite
+
+The `packages/e2e` package (`@benchmark/e2e`) is a Playwright-based functional correctness suite. It tests all four pages across all eight framework apps against a shared set of behavioural assertions, catching regressions that Lighthouse metrics cannot detect.
+
+### Run all apps against all assertions (parallel)
+
+```bash
+make test:e2e
+```
+
+Starts the API, all 8 framework apps, and the `e2e` container. All 8 Playwright projects run in parallel. An HTML report with failure screenshots is written to `packages/e2e/playwright-report/`.
+
+### Run tests for a single app
+
+```bash
+make test:e2e-sveltekit
+make test:e2e-nextjs-app
+make test:e2e-nextjs-pages
+make test:e2e-nuxt
+make test:e2e-astro-vanilla
+make test:e2e-astro-solid
+make test:e2e-qwik
+make test:e2e-solidstart
+```
+
+Only the selected app and the API start. Useful for iterating on a fix without waiting for all 8 apps to build.
+
+### Start all apps without running tests
+
+```bash
+make apps
+```
+
+Brings up the API and all 8 framework apps for manual exploration. No test container is started.
+
+### Run tests locally (without Docker)
+
+With all apps already running on their default ports:
+
+```bash
+pnpm --filter @benchmark/e2e exec playwright test
+```
+
+To run only one project:
+
+```bash
+pnpm --filter @benchmark/e2e exec playwright test --project=sveltekit
+```
+
+Override a base URL via environment variable if an app runs on a non-default port:
+
+```bash
+APP_BASE_SVELTEKIT=http://localhost:9003 pnpm --filter @benchmark/e2e exec playwright test --project=sveltekit
+```
+
+| Project | Env var | Default |
+|---------|---------|---------|
+| `nextjs-app` | `APP_BASE_NEXTJS_APP` | `http://localhost:3001` |
+| `nextjs-pages` | `APP_BASE_NEXTJS_PAGES` | `http://localhost:3002` |
+| `sveltekit` | `APP_BASE_SVELTEKIT` | `http://localhost:3003` |
+| `nuxt` | `APP_BASE_NUXT` | `http://localhost:3004` |
+| `astro-vanilla` | `APP_BASE_ASTRO_VANILLA` | `http://localhost:3005` |
+| `astro-solid` | `APP_BASE_ASTRO_SOLID` | `http://localhost:3006` |
+| `qwik` | `APP_BASE_QWIK` | `http://localhost:3007` |
+| `solidstart` | `APP_BASE_SOLIDSTART` | `http://localhost:3008` |
 
 ## API endpoints
 

@@ -10,8 +10,19 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.json ./
 
 # Copy only the package manifests needed for workspace resolution
-COPY packages/e2e/package.json ./packages/e2e/package.json
+COPY packages/api/package.json ./packages/api/package.json
+COPY packages/astro-solid/package.json ./packages/astro-solid/package.json
+COPY packages/astro-vanilla/package.json ./packages/astro-vanilla/package.json
+COPY packages/benchmark/package.json ./packages/benchmark/package.json
 COPY packages/data/package.json ./packages/data/package.json
+COPY packages/e2e/package.json ./packages/e2e/package.json
+COPY packages/nextjs-app/package.json ./packages/nextjs-app/package.json
+COPY packages/nextjs-pages/package.json ./packages/nextjs-pages/package.json
+COPY packages/nuxt/package.json ./packages/nuxt/package.json
+COPY packages/qwik/package.json ./packages/qwik/package.json
+COPY packages/solidstart/package.json ./packages/solidstart/package.json
+COPY packages/sveltekit/package.json ./packages/sveltekit/package.json
+COPY packages/ui-reference/package.json ./packages/ui-reference/package.json
 
 # Install all workspace dependencies (frozen lockfile)
 RUN pnpm install --frozen-lockfile
@@ -56,8 +67,19 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy workspace manifests and lockfile
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.json ./
-COPY packages/e2e/package.json ./packages/e2e/package.json
+COPY packages/api/package.json ./packages/api/package.json
+COPY packages/astro-solid/package.json ./packages/astro-solid/package.json
+COPY packages/astro-vanilla/package.json ./packages/astro-vanilla/package.json
+COPY packages/benchmark/package.json ./packages/benchmark/package.json
 COPY packages/data/package.json ./packages/data/package.json
+COPY packages/e2e/package.json ./packages/e2e/package.json
+COPY packages/nextjs-app/package.json ./packages/nextjs-app/package.json
+COPY packages/nextjs-pages/package.json ./packages/nextjs-pages/package.json
+COPY packages/nuxt/package.json ./packages/nuxt/package.json
+COPY packages/qwik/package.json ./packages/qwik/package.json
+COPY packages/solidstart/package.json ./packages/solidstart/package.json
+COPY packages/sveltekit/package.json ./packages/sveltekit/package.json
+COPY packages/ui-reference/package.json ./packages/ui-reference/package.json
 
 # Install workspace dependencies (includes @playwright/test CLI)
 RUN pnpm install --frozen-lockfile
