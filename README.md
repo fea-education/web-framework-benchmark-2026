@@ -25,6 +25,25 @@ docker compose up
 
 This builds the API and starts all framework apps. The API will be available at `http://localhost:3000`.
 
+## Running the benchmark suite
+
+To run the full Lighthouse benchmark matrix (8 apps × 4 pages × 3 latency presets × 2 device profiles × 3 runs = 576 measurements):
+
+```bash
+docker compose run benchmark
+```
+
+Results are written to:
+- `results/run-<timestamp>-<app>-<page>-<latency>-<device>-<run>.json` — raw per-run data
+- `results/results.md` — aggregated Markdown summary table with median metrics per combination
+
+The benchmark runner:
+1. Starts all framework apps and the API (via `depends_on`)
+2. Iterates over latency presets (0, 500, 1500 ms), setting `LATENCY_MS` on the API container between batches
+3. Runs Lighthouse 3 times per (app × page × latency × device) combination
+4. Computes median LCP, FCP, TBT, INP, CLS, TTFB, performance score, and JS bundle size
+5. Outputs a Markdown summary table including the rendering mode per page (from each app's `STRATEGY.md`)
+
 ## API endpoints
 
 - `GET /health` — health check (no latency)
