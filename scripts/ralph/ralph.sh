@@ -1,15 +1,24 @@
 #!/bin/bash
 # Ralph Wiggum - Long-running AI agent loop
-# Usage: ./scripts/ralph/ralph.sh [--tool amp|claude|opencode] [max_iterations]
+# Usage: ./scripts/ralph/ralph.sh --impl <slug> [--tool amp|claude|opencode] [max_iterations]
 
 set -e
 
 # Parse arguments
 TOOL="opencode"  # Default to opencode for this project
 MAX_ITERATIONS=50
+IMPL_SLUG=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    --impl)
+      IMPL_SLUG="$2"
+      shift 2
+      ;;
+    --impl=*)
+      IMPL_SLUG="${1#*=}"
+      shift
+      ;;
     --tool)
       TOOL="$2"
       shift 2
@@ -28,6 +37,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# Require --impl
+if [[ -z "$IMPL_SLUG" ]]; then
+  echo "Error: --impl <slug> is required."
+  echo "Usage: ./scripts/ralph/ralph.sh --impl <slug> [--tool amp|claude|opencode] [max_iterations]"
+  echo "Example: ./scripts/ralph/ralph.sh --impl web-framework-benchmark-2026"
+  exit 1
+fi
+
 # Validate tool choice
 if [[ "$TOOL" != "amp" && "$TOOL" != "claude" && "$TOOL" != "opencode" ]]; then
   echo "Error: Invalid tool '$TOOL'. Must be 'amp', 'claude', or 'opencode'."
@@ -36,10 +53,20 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-PRD_FILE="$REPO_ROOT/prd.json"
-PROGRESS_FILE="$REPO_ROOT/progress.txt"
+IMPL_DIR="$REPO_ROOT/implementations/$IMPL_SLUG"
+
+# Validate implementation directory
+if [ ! -d "$IMPL_DIR" ]; then
+  echo "Error: Implementation '$IMPL_SLUG' not found at $IMPL_DIR"
+  echo "Available implementations:"
+  ls "$REPO_ROOT/implementations/" 2>/dev/null || echo "  (none found)"
+  exit 1
+fi
+
+PRD_FILE="$IMPL_DIR/prd.json"
+PROGRESS_FILE="$IMPL_DIR/progress.txt"
 ARCHIVE_DIR="$REPO_ROOT/archive"
-LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch"
+LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch-$IMPL_SLUG"
 
 # Archive previous run if branch changed
 if [ -f "$PRD_FILE" ] && [ -f "$LAST_BRANCH_FILE" ]; then
@@ -79,23 +106,35 @@ if [ ! -f "$PROGRESS_FILE" ]; then
   echo "---" >> "$PROGRESS_FILE"
 fi
 
-echo "Starting Ralph — Tool: $TOOL — Max iterations: $MAX_ITERATIONS"
+# Build the full prompt: prepend impl header to the per-iteration CLAUDE.md
+IMPL_HEADER="## Active implementation
+Slug: $IMPL_SLUG
+Directory: implementations/$IMPL_SLUG/
+
+Read implementations/$IMPL_SLUG/CLAUDE.md for your full instructions.
+
+---
+
+"
+FULL_PROMPT="$IMPL_HEADER$(cat "$SCRIPT_DIR/CLAUDE.md")"
+
+echo "Starting Ralph — Impl: $IMPL_SLUG — Tool: $TOOL — Max iterations: $MAX_ITERATIONS"
 echo "Repo root: $REPO_ROOT"
+echo "Impl dir:  $IMPL_DIR"
 
 for i in $(seq 1 $MAX_ITERATIONS); do
   echo ""
   echo "==============================================================="
-  echo "  Ralph Iteration $i of $MAX_ITERATIONS ($TOOL)"
+  echo "  Ralph Iteration $i of $MAX_ITERATIONS ($TOOL) [$IMPL_SLUG]"
   echo "==============================================================="
 
   if [[ "$TOOL" == "amp" ]]; then
-    OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
+    OUTPUT=$(printf '%s' "$FULL_PROMPT" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
   elif [[ "$TOOL" == "claude" ]]; then
-    # Claude Code: pipe the ralph CLAUDE.md as the prompt, run from repo root
-    OUTPUT=$(claude --dangerously-skip-permissions --print < "$SCRIPT_DIR/CLAUDE.md" 2>&1 | tee /dev/stderr) || true
+    OUTPUT=$(printf '%s' "$FULL_PROMPT" | claude --dangerously-skip-permissions --print 2>&1 | tee /dev/stderr) || true
   else
-    # OpenCode: run non-interactively with the ralph CLAUDE.md content as the prompt
-    OUTPUT=$(opencode run "$(cat "$SCRIPT_DIR/CLAUDE.md")" 2>&1 | tee /dev/stderr) || true
+    # OpenCode: run non-interactively with the full prompt as the argument
+    OUTPUT=$(opencode run "$FULL_PROMPT" 2>&1 | tee /dev/stderr) || true
   fi
 
   # Check for completion signal
