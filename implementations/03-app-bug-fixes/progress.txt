@@ -1,0 +1,3 @@
+## Progress Log — Implementation 03: App Bug Fixes
+
+---

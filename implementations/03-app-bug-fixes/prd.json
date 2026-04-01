@@ -1,0 +1,54 @@
+{
+  "branchName": "03-app-bug-fixes",
+  "_passesValues": "true = done, false = not yet started or in progress, \"aborted\" = failed after 5 attempts (see errors/<id>-error.md)",
+  "slices": [
+    {
+      "id": "01",
+      "title": "Fix SvelteKit: remove listing content from cart page; add localStorage cart persistence; add Add to Cart button to detail page",
+      "file": "issues/01-fix-sveltekit.md",
+      "blockedBy": [],
+      "passes": false,
+      "app": "sveltekit"
+    },
+    {
+      "id": "02",
+      "title": "Fix Nuxt: correct API URL env var mapping so products load on listing page",
+      "file": "issues/02-fix-nuxt.md",
+      "blockedBy": [],
+      "passes": false,
+      "app": "nuxt"
+    },
+    {
+      "id": "03",
+      "title": "Fix Astro Vanilla: replace Add to Cart anchor with button; verify localStorage flow; confirm all D4–D7, C4–C8 pass",
+      "file": "issues/03-fix-astro-vanilla.md",
+      "blockedBy": [],
+      "passes": false,
+      "app": "astro-vanilla"
+    },
+    {
+      "id": "04",
+      "title": "Fix Astro Solid: replace Add to Cart anchor with button + SolidJS cart island; add nav cart count; verify D4–D7, C4–C8 pass",
+      "file": "issues/04-fix-astro-solid.md",
+      "blockedBy": [],
+      "passes": false,
+      "app": "astro-solid"
+    },
+    {
+      "id": "05",
+      "title": "Fix Qwik: add onClick$ handler to Add to Cart button; add cart store with localStorage persistence; add nav cart count; verify D5–D7, C4–C8 pass",
+      "file": "issues/05-fix-qwik.md",
+      "blockedBy": [],
+      "passes": false,
+      "app": "qwik"
+    },
+    {
+      "id": "06",
+      "title": "Fix SolidStart: add Add to Cart button to detail page; add shared cart store with localStorage; add nav cart count; verify D4–D7, C4–C8 pass",
+      "file": "issues/06-fix-solidstart.md",
+      "blockedBy": [],
+      "passes": false,
+      "app": "solidstart"
+    }
+  ]
+}
