@@ -6,7 +6,8 @@
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "test:e2e": "pnpm --filter @benchmark/e2e test"
   },
   "devDependencies": {
     "typescript": "^5.7.3",
