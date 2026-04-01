@@ -140,8 +140,17 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   elif [[ "$TOOL" == "claude" ]]; then
     OUTPUT=$(printf '%s' "$FULL_PROMPT" | claude --dangerously-skip-permissions --print 2>&1 | tee /dev/stderr) || true
   else
-    # OpenCode: run non-interactively with the full prompt as the argument
-    OUTPUT=$(opencode run "$FULL_PROMPT" 2>&1 | tee /dev/stderr) || true
+    # OpenCode: run non-interactively with the full prompt as the argument.
+    # If OPENCODE_SERVER_PASSWORD is set, a headless opencode server is likely
+    # running (e.g. `opencode web`) and we must attach to it with credentials
+    # to avoid mDNS auto-discovery failures ("Session not found").
+    if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
+      OPENCODE_PORT="${OPENCODE_SERVER_PORT:-4096}"
+      # --dir ensures the attached session runs in the repo root, not the server's CWD
+      OUTPUT=$(opencode run --attach "http://localhost:${OPENCODE_PORT}" --password "${OPENCODE_SERVER_PASSWORD}" --dir "$REPO_ROOT" "$FULL_PROMPT" 2>&1 | tee /dev/stderr) || true
+    else
+      OUTPUT=$(opencode run "$FULL_PROMPT" 2>&1 | tee /dev/stderr) || true
+    fi
   fi
 
   # Check for completion signal
