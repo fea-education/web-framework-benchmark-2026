@@ -97,31 +97,19 @@ export default function FilterPage(props: FilterPageProps) {
           {/* Price Range */}
           <div class="mb-6">
             <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Price Range: ${minPrice()} – ${maxPrice()}
+              Max Price: ${maxPrice()}
             </label>
-            <div class="space-y-2">
-              <div>
-                <label class="text-xs text-neutral-500">Min price: ${minPrice()}</label>
-                <input
-                  type="range"
-                  min={0}
-                  max={maxProductPrice()}
-                  value={minPrice()}
-                  onInput={(e) => setMinPrice(Number(e.currentTarget.value))}
-                  class="w-full accent-brand-600"
-                />
-              </div>
-              <div>
-                <label class="text-xs text-neutral-500">Max price: ${maxPrice()}</label>
-                <input
-                  type="range"
-                  min={0}
-                  max={maxProductPrice()}
-                  value={maxPrice()}
-                  onInput={(e) => setMaxPrice(Number(e.currentTarget.value))}
-                  class="w-full accent-brand-600"
-                />
-              </div>
+            <input
+              type="range"
+              min={0}
+              max={maxProductPrice()}
+              value={maxPrice()}
+              onInput={(e) => setMaxPrice(Number(e.currentTarget.value))}
+              class="w-full accent-brand-600"
+            />
+            <div class="flex justify-between text-xs text-neutral-400 mt-1">
+              <span>$0</span>
+              <span>${maxProductPrice()}</span>
             </div>
           </div>
 
@@ -173,36 +161,38 @@ export default function FilterPage(props: FilterPageProps) {
           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             <For each={filteredProducts()}>
               {(product) => (
-                <a
-                  href={`/products/${product.id}`}
-                  class="group block bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md transition-shadow overflow-hidden"
-                >
-                  <div class="aspect-square overflow-hidden bg-neutral-100">
-                    <img
-                      src={product.image_url}
-                      alt={product.name}
-                      width={400}
-                      height={300}
-                      loading="lazy"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div class="p-4">
-                    <span class="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">
-                      {product.category}
-                    </span>
-                    <h3 class="mt-2 text-sm font-semibold text-neutral-900 line-clamp-2 group-hover:text-brand-600 transition-colors">
-                      {product.name}
-                    </h3>
-                    <div class="mt-2 flex items-center justify-between">
-                      <span class="text-lg font-bold text-neutral-900">${product.price.toFixed(2)}</span>
-                      <div class="flex items-center gap-1">
-                        <span class="text-yellow-400 text-sm">★</span>
-                        <span class="text-xs text-neutral-500">{product.rating.toFixed(1)}</span>
+                <article role="article" class="group bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md transition-shadow overflow-hidden">
+                  <a
+                    href={`/products/${product.id}`}
+                    class="block"
+                  >
+                    <div class="aspect-square overflow-hidden bg-neutral-100">
+                      <img
+                        src={product.image_url}
+                        alt={product.name}
+                        width={400}
+                        height={300}
+                        loading="lazy"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div class="p-4">
+                      <span class="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">
+                        {product.category}
+                      </span>
+                      <h3 class="mt-2 text-sm font-semibold text-neutral-900 line-clamp-2 group-hover:text-brand-600 transition-colors">
+                        {product.name}
+                      </h3>
+                      <div class="mt-2 flex items-center justify-between">
+                        <span class="text-lg font-bold text-neutral-900">${product.price.toFixed(2)}</span>
+                        <div class="flex items-center gap-1">
+                          <span class="text-yellow-400 text-sm">★</span>
+                          <span class="text-xs text-neutral-500">{product.rating.toFixed(1)}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </article>
               )}
             </For>
           </div>

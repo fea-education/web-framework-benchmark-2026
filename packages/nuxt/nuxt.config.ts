@@ -15,9 +15,6 @@ export default defineNuxtConfig({
       apiUrl: process.env['API_URL'] ?? 'http://localhost:3000',
     },
   },
-  routeRules: {
-    '/': { prerender: true },
-  },
   image: {
     domains: ['picsum.photos'],
     provider: 'none',

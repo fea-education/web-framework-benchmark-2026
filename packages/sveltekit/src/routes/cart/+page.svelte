@@ -1,12 +1,9 @@
 <script lang="ts">
   import { writable, derived } from 'svelte/store';
-  import type { CartItem, Product, ApiResponse } from '@benchmark/data';
+  import type { CartItem } from '@benchmark/data';
   import { onMount } from 'svelte';
 
-  // Use the SvelteKit proxy route so browser doesn't need direct API access
-  const apiUrl = '/api';
-
-  // Cart store: map from product id to CartItem
+  // Cart store: list of CartItem
   const cartItems = writable<CartItem[]>([]);
 
   // Derived total
@@ -18,31 +15,24 @@
     $items.reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  // All products for "add to cart" demo
-  const products = writable<Product[]>([]);
-  const loading = writable(true);
-
-  onMount(async () => {
+  // Hydrate from localStorage on mount
+  onMount(() => {
     try {
-      const res = await fetch(`${apiUrl}/products`);
-      const json: ApiResponse<Product[]> = await res.json() as ApiResponse<Product[]>;
-      products.set(json.data.slice(0, 12));
-    } finally {
-      loading.set(false);
-    }
-  });
-
-  function addToCart(product: Product) {
-    cartItems.update((items) => {
-      const existing = items.find((i) => i.product.id === product.id);
-      if (existing) {
-        return items.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
+      const stored = localStorage.getItem('cart');
+      if (stored) {
+        cartItems.set(JSON.parse(stored) as CartItem[]);
       }
-      return [...items, { product, quantity: 1 }];
+    } catch {
+      // ignore parse errors
+    }
+
+    // Persist changes back to localStorage
+    const unsubscribe = cartItems.subscribe((items) => {
+      localStorage.setItem('cart', JSON.stringify(items));
     });
-  }
+
+    return unsubscribe;
+  });
 
   function removeFromCart(productId: number) {
     cartItems.update((items) => items.filter((i) => i.product.id !== productId));
@@ -75,7 +65,7 @@
       {:else}
         <div class="space-y-4">
           {#each $cartItems as item (item.product.id)}
-            <div class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4">
+            <div role="article" class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4">
               <img
                 src={item.product.image_url}
                 alt={item.product.name}
@@ -91,6 +81,7 @@
               <div class="flex items-center gap-2">
                 <button
                   onclick={() => updateQuantity(item.product.id, -1)}
+                  aria-label="Decrease quantity"
                   class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
                 >
                   -
@@ -98,6 +89,7 @@
                 <span class="w-8 text-center font-semibold">{item.quantity}</span>
                 <button
                   onclick={() => updateQuantity(item.product.id, 1)}
+                  aria-label="Increase quantity"
                   class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
                 >
                   +
@@ -105,6 +97,7 @@
               </div>
               <button
                 onclick={() => removeFromCart(item.product.id)}
+                aria-label="Remove"
                 class="text-red-500 hover:text-red-700 text-sm font-medium ml-2 transition-colors"
               >
                 Remove
@@ -113,34 +106,6 @@
           {/each}
         </div>
       {/if}
-
-      <!-- Add products section -->
-      <div class="mt-10">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">Add Products</h2>
-        {#if $loading}
-          <p class="text-gray-400">Loading…</p>
-        {:else}
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {#each $products as product (product.id)}
-              <button
-                onclick={() => addToCart(product)}
-                class="bg-white rounded-lg shadow-sm p-3 text-left hover:shadow-md transition-shadow"
-              >
-                <img
-                  src={product.image_url}
-                  alt={product.name}
-                  width="200"
-                  height="150"
-                  class="w-full h-28 object-cover rounded-md mb-2"
-                  loading="lazy"
-                />
-                <p class="text-xs font-medium text-gray-800 line-clamp-2">{product.name}</p>
-                <p class="text-xs text-blue-600 font-semibold mt-1">${product.price.toFixed(2)}</p>
-              </button>
-            {/each}
-          </div>
-        {/if}
-      </div>
     </div>
 
     <!-- Order summary -->

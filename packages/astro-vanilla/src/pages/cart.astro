@@ -137,7 +137,7 @@ import Layout from '../layouts/Layout.astro';
     if (totalEl) totalEl.textContent = subtotal.toFixed(2);
 
     itemsEl.innerHTML = cart.map((item) => `
-      <div class="bg-surface rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-4 flex gap-4 items-center" data-product-id="${item.product.id}">
+      <article role="article" class="bg-surface rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-4 flex gap-4 items-center" data-product-id="${item.product.id}">
         <a href="/products/${item.product.id}" class="shrink-0">
           <img
             src="${item.product.image_url}"
@@ -159,7 +159,7 @@ import Layout from '../layouts/Layout.astro';
           <button
             class="text-neutral-400 hover:text-danger transition-colors"
             onclick="window.__removeCartItem(${item.product.id})"
-            aria-label="Remove item"
+            aria-label="Remove"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -179,7 +179,7 @@ import Layout from '../layouts/Layout.astro';
             >+</button>
           </div>
         </div>
-      </div>
+      </article>
     `).join('');
   }
 

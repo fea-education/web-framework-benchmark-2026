@@ -33,6 +33,7 @@ const { title, description = 'Web Framework Benchmark 2026 — Astro Vanilla' } 
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               Cart
+              <span id="nav-cart-count" class="hidden ml-1 text-xs font-bold bg-brand-600 text-white rounded-full w-5 h-5 flex items-center justify-center"></span>
             </a>
           </nav>
         </div>
@@ -50,3 +51,37 @@ const { title, description = 'Web Framework Benchmark 2026 — Astro Vanilla' } 
     </footer>
   </body>
 </html>
+
+<script>
+  function updateNavCartCount() {
+    const badge = document.getElementById('nav-cart-count');
+    if (!badge) return;
+    const stored = localStorage.getItem('cart');
+    let count = 0;
+    if (stored) {
+      try {
+        const cart = JSON.parse(stored) as Array<{ quantity: number }>;
+        count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      } catch {
+        count = 0;
+      }
+    }
+    if (count > 0) {
+      badge.textContent = String(count);
+      badge.classList.remove('hidden');
+    } else {
+      badge.textContent = '';
+      badge.classList.add('hidden');
+    }
+  }
+
+  updateNavCartCount();
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'cart') updateNavCartCount();
+  });
+
+  document.addEventListener('cart-updated', () => {
+    updateNavCartCount();
+  });
+</script>

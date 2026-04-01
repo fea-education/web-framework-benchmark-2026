@@ -73,12 +73,13 @@ const { product } = Astro.props as { product: Product };
         )}
 
         <div class="mt-8">
-          <a
-            href="/cart"
-            class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-lg transition-colors"
+          <button
+            id="add-to-cart-btn"
+            data-product={JSON.stringify(product)}
+            class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-lg transition-colors cursor-pointer"
           >
             Add to Cart
-          </a>
+          </button>
           <a
             href="/"
             class="ml-4 inline-block text-blue-600 hover:text-blue-700 font-medium transition-colors"
@@ -90,3 +91,35 @@ const { product } = Astro.props as { product: Product };
     </div>
   </div>
 </Layout>
+
+<script>
+  const btn = document.getElementById('add-to-cart-btn') as HTMLButtonElement | null;
+
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const productData = btn.dataset['product'];
+      if (!productData) return;
+
+      const product = JSON.parse(productData);
+      const raw = localStorage.getItem('cart');
+      const cart: Array<{ product: { id: number; [key: string]: unknown }; quantity: number }> = raw ? JSON.parse(raw) : [];
+
+      const existing = cart.find((item) => item.product.id === product.id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ product, quantity: 1 });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Update nav cart count
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountEl = document.getElementById('nav-cart-count');
+      if (cartCountEl) {
+        cartCountEl.textContent = String(totalItems);
+        cartCountEl.style.display = totalItems > 0 ? 'inline' : 'none';
+      }
+    });
+  }
+</script>

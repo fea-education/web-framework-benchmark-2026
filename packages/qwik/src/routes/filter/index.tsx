@@ -1,7 +1,7 @@
-import { component$, useSignal, useComputed$ } from '@builder.io/qwik';
+import { component$, useStore, useTask$, useSignal, useComputed$, useVisibleTask$ } from '@builder.io/qwik';
 import { routeLoader$, type DocumentHead } from '@builder.io/qwik-city';
+import { isServer } from '@builder.io/qwik/build';
 import type { ApiResponse, Product, Category } from '@benchmark/data';
-import { Link } from '@builder.io/qwik-city';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
@@ -27,8 +27,45 @@ export const useAllProducts = routeLoader$(async () => {
   }
 });
 
+interface FilterState {
+  products: Product[];
+  loaded: boolean;
+}
+
 export default component$(() => {
-  const allProducts = useAllProducts();
+  const loader = useAllProducts();
+
+  // Store holds products for client-side filtering
+  // On server: populated from loader. On client: fetched from /api/products
+  const state = useStore<FilterState>({
+    products: [],
+    loaded: false,
+  });
+
+  // Server-side: copy loader data into store
+  useTask$(() => {
+    if (isServer) {
+      state.products = loader.value;
+      state.loaded = true;
+    }
+  });
+
+  // Client-side: fetch products from local proxy endpoint
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    if (state.products.length === 0) {
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const json = (await res.json()) as ApiResponse<Product[]>;
+          state.products = json.data;
+          state.loaded = true;
+        }
+      } catch {
+        // keep empty
+      }
+    }
+  });
 
   const selectedCategory = useSignal<Category | ''>('');
   const minPrice = useSignal<number>(0);
@@ -36,7 +73,7 @@ export default component$(() => {
   const minRating = useSignal<number>(0);
 
   const filtered = useComputed$(() => {
-    return allProducts.value.filter((p) => {
+    return state.products.filter((p) => {
       if (selectedCategory.value && p.category !== selectedCategory.value) return false;
       if (p.price < minPrice.value) return false;
       if (maxPrice.value < 10000 && p.price > maxPrice.value) return false;
@@ -58,7 +95,7 @@ export default component$(() => {
               <h2 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
                 Category
               </h2>
-              <div class="space-y-2">
+              <div role="radiogroup" aria-label="Category" class="space-y-2">
                 <label class="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -151,35 +188,36 @@ export default component$(() => {
           <p class="text-sm text-gray-500 mb-4">{filtered.value.length} products found</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.value.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-              >
-                <img
-                  src={product.image_url}
-                  alt={product.name}
-                  width={400}
-                  height={300}
-                  class="w-full h-48 object-cover"
-                  loading="lazy"
-                />
-                <div class="p-4">
-                  <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                    {product.category}
-                  </span>
-                  <h2 class="mt-2 text-base font-semibold text-gray-900 line-clamp-2">
-                    {product.name}
-                  </h2>
-                  <div class="mt-2 flex items-center justify-between">
-                    <span class="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
-                    <span class="text-sm text-gray-500">★ {product.rating.toFixed(1)}</span>
+              <article key={product.id} role="article" class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <a
+                  href={`/products/${product.id}/`}
+                  class="block"
+                >
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    width={400}
+                    height={300}
+                    class="w-full h-48 object-cover"
+                    loading="lazy"
+                  />
+                  <div class="p-4">
+                    <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                      {product.category}
+                    </span>
+                    <h2 class="mt-2 text-base font-semibold text-gray-900 line-clamp-2">
+                      {product.name}
+                    </h2>
+                    <div class="mt-2 flex items-center justify-between">
+                      <span class="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
+                      <span class="text-sm text-gray-500">★ {product.rating.toFixed(1)}</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </a>
+              </article>
             ))}
           </div>
-          {filtered.value.length === 0 && (
+          {filtered.value.length === 0 && state.loaded && (
             <div class="text-center py-16 text-gray-500">
               No products match your filters.
             </div>

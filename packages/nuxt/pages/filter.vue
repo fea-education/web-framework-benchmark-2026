@@ -126,6 +126,7 @@ function addToCart(product: Parameters<typeof cartStore.addItem>[0]) {
           <div
             v-for="product in filterStore.filteredProducts"
             :key="product.id"
+            role="listitem"
             class="bg-surface rounded-[var(--radius-card)] shadow-card overflow-hidden"
           >
             <NuxtLink :to="`/products/${product.id}`">

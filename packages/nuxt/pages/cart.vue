@@ -29,6 +29,7 @@ const cartStore = useCartStore()
         <div
           v-for="item in cartStore.items"
           :key="item.product.id"
+          role="listitem"
           class="bg-surface rounded-[var(--radius-card)] shadow-card p-4 flex gap-4"
         >
           <div class="w-24 h-24 rounded-lg overflow-hidden bg-neutral-100 shrink-0">
@@ -65,6 +66,7 @@ const cartStore = useCartStore()
               </button>
               <span class="w-8 text-center font-medium text-neutral-900">{{ item.quantity }}</span>
               <button
+                aria-label="Increase quantity"
                 class="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-200 hover:bg-neutral-100 transition-colors text-neutral-700"
                 @click="cartStore.updateQuantity(item.product.id, item.quantity + 1)"
               >

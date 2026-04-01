@@ -24,7 +24,7 @@ const { title, description = 'E-commerce benchmark application' } = Astro.props;
         <nav class="flex items-center gap-6">
           <a href="/" class="text-sm text-neutral-600 hover:text-brand-600 transition-colors">Products</a>
           <a href="/filter" class="text-sm text-neutral-600 hover:text-brand-600 transition-colors">Filter</a>
-          <a href="/cart" class="text-sm text-neutral-600 hover:text-brand-600 transition-colors">Cart</a>
+          <a href="/cart" class="text-sm text-neutral-600 hover:text-brand-600 transition-colors">Cart <span id="nav-cart-count" style="display:none" class="ml-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5"></span></a>
         </nav>
       </div>
     </header>
@@ -36,5 +36,24 @@ const { title, description = 'E-commerce benchmark application' } = Astro.props;
         &copy; 2026 ShopBench — Web Framework Benchmark
       </div>
     </footer>
+    <script>
+      (function () {
+        const raw = localStorage.getItem('cart');
+        if (!raw) return;
+        try {
+          const cart: Array<{ quantity: number }> = JSON.parse(raw);
+          const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+          if (total > 0) {
+            const el = document.getElementById('nav-cart-count');
+            if (el) {
+              el.textContent = String(total);
+              el.style.display = 'inline';
+            }
+          }
+        } catch (_) {
+          // ignore malformed cart data
+        }
+      })();
+    </script>
   </body>
 </html>

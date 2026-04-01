@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import type { Product } from '@benchmark/data';
+  import { onMount } from 'svelte';
+  import { addToCart, loadCart } from '$lib/cart';
 
   interface Props {
     data: PageData;
@@ -8,6 +9,14 @@
 
   let { data }: Props = $props();
   let product = $derived(data.product);
+
+  onMount(() => {
+    loadCart();
+  });
+
+  function handleAddToCart() {
+    addToCart(product);
+  }
 </script>
 
 <svelte:head>
@@ -48,12 +57,12 @@
             {/each}
           </div>
         {/if}
-        <a
-          href="/cart"
-          class="mt-6 block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition-colors"
+        <button
+          onclick={handleAddToCart}
+          class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition-colors"
         >
           Add to Cart
-        </a>
+        </button>
       </div>
     </div>
   </div>

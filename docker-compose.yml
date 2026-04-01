@@ -92,7 +92,7 @@ services:
     ports:
       - "3004:3000"
     environment:
-      NUXT_PUBLIC_API_BASE: http://api:3000
+      NUXT_PUBLIC_API_URL: http://api:3000
     networks:
       - benchmark-net
     depends_on:

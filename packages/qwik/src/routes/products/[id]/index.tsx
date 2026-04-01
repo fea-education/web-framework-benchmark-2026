@@ -1,6 +1,7 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import { routeLoader$, type DocumentHead } from '@builder.io/qwik-city';
 import type { ApiResponse, Product } from '@benchmark/data';
+import { CartContext } from '../../../context/cart';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
@@ -21,6 +22,7 @@ export const useProduct = routeLoader$(async ({ params, status }) => {
 
 export default component$(() => {
   const product = useProduct();
+  const cartStore = useContext(CartContext);
 
   if (!product.value) {
     return (
@@ -79,6 +81,16 @@ export default component$(() => {
             <button
               class="mt-6 w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               disabled={p.stock === 0}
+              onClick$={() => {
+                const existing = cartStore.items.find((i) => i.product.id === p.id);
+                if (existing) {
+                  cartStore.items = cartStore.items.map((i) =>
+                    i.product.id === p.id ? { ...i, quantity: i.quantity + 1 } : i
+                  );
+                } else {
+                  cartStore.items = [...cartStore.items, { product: p, quantity: 1 }];
+                }
+              }}
             >
               {p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
             </button>

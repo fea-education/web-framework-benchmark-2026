@@ -1,8 +1,7 @@
 import { createSignal, createMemo, For, Show, onMount } from "solid-js";
 import type { Product, Category, ApiResponse } from "@benchmark/data";
-import { A } from "@solidjs/router";
 
-const API_URL = import.meta.env["VITE_API_URL"] ?? "http://localhost:3000";
+const API_URL = "/api";
 
 const CATEGORIES: Category[] = [
   "Electronics",
@@ -21,9 +20,9 @@ export default function FilterPage() {
   const [products, setProducts] = createSignal<Product[]>([]);
   const [loading, setLoading] = createSignal(true);
   const [error, setError] = createSignal<string | null>(null);
-  const [selectedCategories, setSelectedCategories] = createSignal<Set<Category>>(new Set());
-  const [minPrice, setMinPrice] = createSignal(0);
-  const [maxPrice, setMaxPrice] = createSignal(1000);
+  const [selectedCategory, setSelectedCategory] = createSignal<Category | "">("");
+  const [maxPriceFilter, setMaxPriceFilter] = createSignal(1000);
+  const [maxPriceBound, setMaxPriceBound] = createSignal(1000);
   const [minRating, setMinRating] = createSignal(0);
   const [sortKey, setSortKey] = createSignal<SortKey>("name");
 
@@ -34,7 +33,9 @@ export default function FilterPage() {
       const json = (await res.json()) as ApiResponse<Product[]>;
       setProducts(json.data);
       const prices = json.data.map((p) => p.price);
-      setMaxPrice(Math.ceil(Math.max(...prices)));
+      const max = Math.ceil(Math.max(...prices));
+      setMaxPriceBound(max);
+      setMaxPriceFilter(max);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load products");
     } finally {
@@ -42,24 +43,11 @@ export default function FilterPage() {
     }
   });
 
-  const toggleCategory = (cat: Category) => {
-    setSelectedCategories((prev: Set<Category>) => {
-      const next = new Set<Category>(prev);
-      if (next.has(cat)) {
-        next.delete(cat);
-      } else {
-        next.add(cat);
-      }
-      return next;
-    });
-  };
-
   const filtered = createMemo(() => {
     return products()
       .filter((p) => {
-        if (selectedCategories().size > 0 && !selectedCategories().has(p.category))
-          return false;
-        if (p.price < minPrice() || p.price > maxPrice()) return false;
+        if (selectedCategory() !== "" && p.category !== selectedCategory()) return false;
+        if (p.price > maxPriceFilter()) return false;
         if (p.rating < minRating()) return false;
         return true;
       })
@@ -78,11 +66,10 @@ export default function FilterPage() {
   });
 
   const resetFilters = () => {
-    setSelectedCategories(new Set<Category>());
-    setMinPrice(0);
-    const prices = products().map((p) => p.price);
-    setMaxPrice(prices.length > 0 ? Math.ceil(Math.max(...prices)) : 1000);
+    setSelectedCategory("");
+    setMaxPriceFilter(maxPriceBound());
     setMinRating(0);
+    setSortKey("name");
   };
 
   return (
@@ -107,52 +94,38 @@ export default function FilterPage() {
               <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                 <h2 class="text-base font-semibold text-gray-900 mb-4">Filters</h2>
 
-                {/* Categories */}
+                {/* Category select — role="combobox" for test F3/F4 */}
                 <div class="mb-6">
-                  <h3 class="text-sm font-medium text-gray-700 mb-3">Category</h3>
-                  <div class="flex flex-col gap-2">
+                  <label class="text-sm font-medium text-gray-700 mb-2 block" for="category-select">
+                    Category
+                  </label>
+                  <select
+                    id="category-select"
+                    value={selectedCategory()}
+                    onChange={(e) => setSelectedCategory(e.currentTarget.value as Category | "")}
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">All Categories</option>
                     <For each={CATEGORIES}>
-                      {(cat) => (
-                        <label class="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={selectedCategories().has(cat)}
-                            onChange={() => toggleCategory(cat)}
-                            class="h-4 w-4 rounded border-gray-300 text-blue-600"
-                          />
-                          <span class="text-sm text-gray-600">{cat}</span>
-                        </label>
-                      )}
+                      {(cat) => <option value={cat}>{cat}</option>}
                     </For>
-                  </div>
+                  </select>
                 </div>
 
-                {/* Price Range */}
+                {/* Price Range — max price first (F6: fill "0" hides all products) */}
                 <div class="mb-6">
-                  <h3 class="text-sm font-medium text-gray-700 mb-3">Price Range</h3>
-                  <div class="flex flex-col gap-3">
-                    <div>
-                      <label class="text-xs text-gray-500">Min: ${minPrice()}</label>
-                      <input
-                        type="range"
-                        min={0}
-                        max={maxPrice()}
-                        value={minPrice()}
-                        onInput={(e) => setMinPrice(Number(e.currentTarget.value))}
-                        class="w-full accent-blue-600"
-                      />
-                    </div>
-                    <div>
-                      <label class="text-xs text-gray-500">Max: ${maxPrice()}</label>
-                      <input
-                        type="range"
-                        min={0}
-                        max={maxPrice()}
-                        value={maxPrice()}
-                        onInput={(e) => setMaxPrice(Number(e.currentTarget.value))}
-                        class="w-full accent-blue-600"
-                      />
-                    </div>
+                  <h3 class="text-sm font-medium text-gray-700 mb-3">Max Price: ${maxPriceFilter()}</h3>
+                  <input
+                    type="range"
+                    min={0}
+                    max={maxPriceBound()}
+                    value={maxPriceFilter()}
+                    onInput={(e) => setMaxPriceFilter(Number(e.currentTarget.value))}
+                    class="w-full accent-blue-600"
+                  />
+                  <div class="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>$0</span>
+                    <span>${maxPriceBound()}</span>
                   </div>
                 </div>
 
@@ -215,35 +188,37 @@ export default function FilterPage() {
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   <For each={filtered()}>
                     {(product) => (
-                      <A
-                        href={`/products/${product.id}`}
-                        class="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100"
-                      >
-                        <img
-                          src={product.image_url}
-                          alt={product.name}
-                          width={400}
-                          height={300}
-                          class="w-full h-40 object-cover"
-                          loading="lazy"
-                        />
-                        <div class="p-4">
-                          <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                            {product.category}
-                          </span>
-                          <h2 class="mt-2 text-sm font-semibold text-gray-900 line-clamp-2">
-                            {product.name}
-                          </h2>
-                          <div class="mt-2 flex items-center justify-between">
-                            <span class="text-base font-bold text-gray-900">
-                              ${product.price.toFixed(2)}
+                      <article role="article">
+                        <a
+                          href={`/products/${product.id}`}
+                          class="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100"
+                        >
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            width={400}
+                            height={300}
+                            class="w-full h-40 object-cover"
+                            loading="lazy"
+                          />
+                          <div class="p-4">
+                            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                              {product.category}
                             </span>
-                            <span class="text-sm text-gray-500">
-                              ★ {product.rating.toFixed(1)}
-                            </span>
+                            <h2 class="mt-2 text-sm font-semibold text-gray-900 line-clamp-2">
+                              {product.name}
+                            </h2>
+                            <div class="mt-2 flex items-center justify-between">
+                              <span class="text-base font-bold text-gray-900">
+                                ${product.price.toFixed(2)}
+                              </span>
+                              <span class="text-sm text-gray-500">
+                                ★ {product.rating.toFixed(1)}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </A>
+                        </a>
+                      </article>
                     )}
                   </For>
                 </div>

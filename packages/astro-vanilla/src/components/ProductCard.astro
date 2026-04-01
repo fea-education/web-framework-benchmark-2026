@@ -9,7 +9,7 @@ interface Props {
 const { product } = Astro.props;
 ---
 
-<article class="bg-surface rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden">
+<article role="article" class="bg-surface rounded-[var(--radius-card)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow overflow-hidden">
   <a href={`/products/${product.id}`} class="block">
     <div class="aspect-square overflow-hidden bg-neutral-100">
       <Image

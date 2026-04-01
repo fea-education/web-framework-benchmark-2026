@@ -1,7 +1,8 @@
 import { createAsync, cache, useParams } from "@solidjs/router";
-import { Show, Suspense } from "solid-js";
+import { Show, Suspense, onMount } from "solid-js";
 import type { ApiResponse, Product } from "@benchmark/data";
 import { A } from "@solidjs/router";
+import { addToCart, hydrateCart } from "../../stores/cart";
 
 const API_URL = import.meta.env["VITE_API_URL"] ?? "http://localhost:3000";
 
@@ -25,6 +26,7 @@ export const route = {
 export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const product = createAsync(() => getProduct(params.id));
+  onMount(() => hydrateCart());
 
   return (
     <Suspense
@@ -94,6 +96,15 @@ export default function ProductDetailPage() {
                     <span class="text-red-600">Out of stock</span>
                   )}
                 </p>
+                <button
+                  disabled={p().stock === 0}
+                  onClick={() => {
+                    addToCart(p());
+                  }}
+                  class="mt-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                >
+                  {p().stock > 0 ? "Add to Cart" : "Out of Stock"}
+                </button>
               </div>
             </div>
           </div>

@@ -90,7 +90,7 @@ const { product } = Astro.props;
         {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
       </button>
 
-      <p id="cart-feedback" class="mt-3 text-sm text-success hidden">Added to cart!</p>
+      <p id="cart-feedback" class="mt-3 text-sm text-success hidden">Added!</p>
     </div>
   </div>
 </Layout>
@@ -126,6 +126,9 @@ const { product } = Astro.props;
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Dispatch event so the nav cart count updates immediately
+    document.dispatchEvent(new CustomEvent('cart-updated'));
 
     if (feedback) {
       feedback.classList.remove('hidden');

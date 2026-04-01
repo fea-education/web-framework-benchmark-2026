@@ -1,3 +1,40 @@
 ## Progress Log — Implementation 03: App Bug Fixes
 
 ---
+
+### 2026-04-01 — All 6 slices completed in parallel
+
+**Slice 01 — SvelteKit** ✅
+- Root cause: SvelteKit's client-side router fired `resourceType === "fetch"` not `"document"` for link clicks; also `window.addEventListener('storage')` only fires for other-tab events (not same-window).
+- Fix: Added `data-sveltekit-reload` on listing links to force real HTTP navigation; extracted cart state into shared Svelte store (`$lib/cart.ts`) with localStorage persistence; layout subscribes reactively to `cartCount`.
+- Also fixed: `filter/+page.svelte` product cards needed explicit `role="article"` attribute (not just `<article>` element); D6 strict mode violation fixed by removing text feedback and using only the nav count.
+
+**Slice 02 — Nuxt** ✅
+- Root cause: `NUXT_PUBLIC_API_BASE` env var (maps to `runtimeConfig.public.apiBase`) but nuxt.config.ts used `apiUrl` key.
+- Fix: Changed to `NUXT_PUBLIC_API_URL` in docker-compose.yml (Option A, single-line change).
+- Additional fixes: product card links changed to `<a>` for proper document navigation; added server-side proxy `/api/products` to avoid CORS on CSR filter page; added `cart-persist.client.ts` plugin for localStorage persistence across full-page navigations; added cart count to nav in default layout.
+
+**Slice 03 — Astro Vanilla** ✅
+- Root cause: Cart page lacked localStorage-driven rendering; nav cart count missing.
+- Fix: Added `<script>` block to `cart.astro` rendering `<article>` items from localStorage; added nav cart count script to `Layout.astro`; detail page button already correct.
+
+**Slice 04 — Astro Solid** ✅
+- Root cause: Detail page had `<a href="/cart">Add to Cart</a>` instead of a button; `-s` (SPA) flag in Dockerfile serve command broke routing; cart page had "Add Products" sidebar causing strict mode failures.
+- Fix: Replaced anchor with `<button data-product>` + vanilla JS script for localStorage; removed `-s` flag from Dockerfile; fixed `CartPage.tsx` to read localStorage on mount; added `role="article"` to cart items; fixed FilterPage product card structure; fixed listing page `<ul role="list">` structure.
+
+**Slice 05 — Qwik** ✅
+- Root cause: "Add to Cart" button had no `onClick$` handler; no shared cart context/store; no nav count.
+- Fix: Created `CartContext` in layout.tsx with `useStore` + `useVisibleTask$` for localStorage hydration and `useTask$` for persistence; added `onClick$` with in-place mutation (Qwik's proxy reactivity requires direct property assignment / `splice`, not array replacement); added nav count in layout; fixed cart page to use context.
+
+**Slice 06 — SolidStart** ✅
+- Root cause: No "Add to Cart" button on detail page; cart page used local store (resets on navigation); no nav count.
+- Fix: Created `src/stores/cart.ts` module-level store with localStorage persistence; added "Add to Cart" button to detail page; updated cart page to use shared store; added nav cart count in `app.tsx`. D6 strict mode fixed by removing text feedback (only nav count shown); C4 strict mode fixed by removing "Add Products" sidebar from cart page.
+
+### Key learnings
+
+1. **SvelteKit SPA routing**: `window.addEventListener('storage')` doesn't fire in same window — use a Svelte writable store subscribed in both layout and pages.
+2. **Nuxt auto-env mapping**: `NUXT_PUBLIC_<KEY>` maps to `runtimeConfig.public.<camelCasedKey>` — key name must match exactly.
+3. **Qwik reactivity**: `useStore` uses Proxy — deep mutations (direct property assignment, `splice`) are tracked; array replacement (`= array.map(...)`) is not reliably tracked in child components.
+4. **Strict mode Playwright failures**: `locator.or().toBeVisible()` fails if BOTH locators match — only one feedback mechanism (nav count vs. text) should be visible at a time.
+5. **Astro `-s` serve flag**: Serving Astro static output with `serve -s` (SPA mode) rewrites all routes to `index.html` — breaks multi-page Astro apps. Remove `-s` flag.
+6. **CORS for CSR API calls**: Browser-side `fetch` to a different Docker service origin is blocked by CORS. Proxy through the framework's own server instead.

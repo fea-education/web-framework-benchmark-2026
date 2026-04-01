@@ -41,11 +41,11 @@ export const useFilterStore = defineStore('filter', {
   },
 
   actions: {
-    async fetchProducts(apiUrl: string) {
+    async fetchProducts(_apiUrl?: string) {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch<{ data: Product[] }>(`${apiUrl}/products`)
+        const response = await $fetch<{ data: Product[] }>('/api/products')
         this.products = response.data
       } catch (e) {
         this.error = e instanceof Error ? e.message : 'Failed to fetch products'

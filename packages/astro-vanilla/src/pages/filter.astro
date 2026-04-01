@@ -50,26 +50,26 @@ const productsJson = JSON.stringify(products);
         <div class="mb-6">
           <h3 class="text-sm font-semibold text-neutral-700 mb-3 uppercase tracking-wide">Price Range</h3>
           <div class="space-y-3">
-            <div class="flex items-center gap-2">
-              <label class="text-xs text-neutral-500 w-8">Min</label>
+            <div class="flex flex-col gap-1">
+              <label class="text-xs text-neutral-500">Min: $<span id="price-min-display">{minPrice}</span></label>
               <input
-                type="number"
+                type="range"
                 id="price-min"
                 value={minPrice}
                 min={minPrice}
                 max={maxPrice}
-                class="flex-1 text-sm border border-neutral-200 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                class="w-full accent-brand-600"
               />
             </div>
-            <div class="flex items-center gap-2">
-              <label class="text-xs text-neutral-500 w-8">Max</label>
+            <div class="flex flex-col gap-1">
+              <label class="text-xs text-neutral-500">Max: $<span id="price-max-display">{maxPrice}</span></label>
               <input
-                type="number"
+                type="range"
                 id="price-max"
                 value={maxPrice}
                 min={minPrice}
                 max={maxPrice}
-                class="flex-1 text-sm border border-neutral-200 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                class="w-full accent-brand-600"
               />
             </div>
           </div>
@@ -78,7 +78,7 @@ const productsJson = JSON.stringify(products);
         <!-- Rating Filter -->
         <div class="mb-6">
           <h3 class="text-sm font-semibold text-neutral-700 mb-3 uppercase tracking-wide">Min Rating</h3>
-          <div class="space-y-2">
+          <div role="radiogroup" aria-label="Minimum rating" class="space-y-2">
             {[0, 1, 2, 3, 4].map((r) => (
               <label class="flex items-center gap-2 cursor-pointer">
                 <input
@@ -160,7 +160,7 @@ const productsJson = JSON.stringify(products);
     } else {
       noResults.classList.add('hidden');
       grid.innerHTML = filtered.map((product) => `
-        <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+        <article role="article" class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
           <a href="/products/${product.id}" class="block">
             <div class="aspect-square overflow-hidden bg-gray-100">
               <img
