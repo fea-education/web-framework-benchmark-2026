@@ -1,6 +1,7 @@
 #!/bin/bash
 # Ralph Wiggum - Long-running AI agent loop
-# Usage: ./scripts/ralph/ralph.sh --impl <slug> [--tool amp|claude|opencode] [max_iterations]
+# Usage: ./scripts/ralph/ralph.sh --impl <NN-slug> [--tool amp|claude|opencode] [max_iterations]
+# Implementation dirs are numbered: implementations/01-web-framework-benchmark-2026/
 
 set -e
 
@@ -39,9 +40,9 @@ done
 
 # Require --impl
 if [[ -z "$IMPL_SLUG" ]]; then
-  echo "Error: --impl <slug> is required."
-  echo "Usage: ./scripts/ralph/ralph.sh --impl <slug> [--tool amp|claude|opencode] [max_iterations]"
-  echo "Example: ./scripts/ralph/ralph.sh --impl web-framework-benchmark-2026"
+  echo "Error: --impl <NN-slug> is required."
+  echo "Usage: ./scripts/ralph/ralph.sh --impl <NN-slug> [--tool amp|claude|opencode] [max_iterations]"
+  echo "Example: ./scripts/ralph/ralph.sh --impl 01-web-framework-benchmark-2026"
   exit 1
 fi
 

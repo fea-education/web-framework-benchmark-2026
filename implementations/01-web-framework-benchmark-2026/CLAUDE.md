@@ -4,18 +4,18 @@
 
 Eight optimally-implemented e-commerce applications (one per framework variant), a shared Hono API, a shared data package, and an automated Playwright + Lighthouse benchmark runner. The goal is reproducible, side-by-side performance comparison across SSG, SSR, and CSR rendering modes under controlled latency conditions.
 
-Full spec: `implementations/web-framework-benchmark-2026/prd.md`
+Full spec: `implementations/01-web-framework-benchmark-2026/prd.md`
 
 For monorepo conventions, Docker setup, quality checks, and framework app conventions, read the root `CLAUDE.md` first.
 
 ## How to resume after a context reset
 
-1. Read `implementations/web-framework-benchmark-2026/prd.json` — it tracks which slices are `passes: true`, `passes: false`, or `"aborted"`
-2. Read `implementations/web-framework-benchmark-2026/progress.txt` (if it exists) — append-only learnings from previous iterations
+1. Read `implementations/01-web-framework-benchmark-2026/prd.json` — it tracks which slices are `passes: true`, `passes: false`, or `"aborted"`
+2. Read `implementations/01-web-framework-benchmark-2026/progress.txt` (if it exists) — append-only learnings from previous iterations
 3. Identify the next eligible slice: `passes: false` AND all `blockedBy` IDs are `passes: true` (aborted blockers count as skip — see below)
-4. Read the corresponding `implementations/web-framework-benchmark-2026/issues/<id>-*.md` file for the full spec of that slice
-5. Implement it using the retry protocol (see below), run quality checks, commit, then mark it `passes: true` in `implementations/web-framework-benchmark-2026/prd.json`
-6. Append any learnings to `implementations/web-framework-benchmark-2026/progress.txt`
+4. Read the corresponding `implementations/01-web-framework-benchmark-2026/issues/<id>-*.md` file for the full spec of that slice
+5. Implement it using the retry protocol (see below), run quality checks, commit, then mark it `passes: true` in `implementations/01-web-framework-benchmark-2026/prd.json`
+6. Append any learnings to `implementations/01-web-framework-benchmark-2026/progress.txt`
 7. Repeat from step 3
 
 When all stories are either `passes: true` or `"aborted"`, output `<promise>COMPLETE</promise>` and stop.
@@ -30,9 +30,9 @@ The goal is to complete as many slices as possible. A failing slice must never b
 2. If any check fails, diagnose the error and try a different approach
 3. Repeat up to **5 attempts total**
 4. If the slice has not passed after 5 attempts:
-   a. Write an error log to `implementations/web-framework-benchmark-2026/errors/<id>-error.md` (format below)
+   a. Write an error log to `implementations/01-web-framework-benchmark-2026/errors/<id>-error.md` (format below)
    b. Commit the error log: `chore: abort slice <id> — error log`
-   c. Set `"passes": "aborted"` in `implementations/web-framework-benchmark-2026/prd.json` for that slice
+   c. Set `"passes": "aborted"` in `implementations/01-web-framework-benchmark-2026/prd.json` for that slice
    d. Do NOT leave broken code committed — revert any partial implementation for that slice before moving on
    e. Continue to the next eligible slice
 
@@ -42,7 +42,7 @@ Each attempt must try a meaningfully different approach (different dependency ve
 **Handling aborted blockers:**
 If a slice's blocker is `"aborted"`, treat the blocker as resolved for the purpose of unblocking dependents. The dependent slice should note in its implementation that the blocker is absent and adapt accordingly (e.g. if `packages/data` failed, a dependent slice cannot proceed — abort it immediately with attempt count 1 and reference the blocker's error log).
 
-**Error log format — `implementations/web-framework-benchmark-2026/errors/<id>-error.md`:**
+**Error log format — `implementations/01-web-framework-benchmark-2026/errors/<id>-error.md`:**
 
 ```markdown
 # Slice <id> — Abort Log
@@ -81,8 +81,8 @@ Where multiple slices are eligible at the same time (no unresolved blockers), la
 
 1. Identify all slices where `passes: false` AND every ID in `blockedBy` is `passes: true`
 2. For each eligible slice, spawn a sub-agent with this instruction:
-   > "Read root `CLAUDE.md` for project conventions. Read `implementations/web-framework-benchmark-2026/CLAUDE.md` for the implementation resume protocol. Read `implementations/web-framework-benchmark-2026/issues/<id>-<title>.md` for the full spec. Implement the slice. If quality checks fail, retry up to 5 attempts using different approaches before aborting. On SUCCESS: commit with message `feat: slice <id> — <title>` and report SUCCESS. On ABORT after 5 attempts: write `implementations/web-framework-benchmark-2026/errors/<id>-error.md`, commit it, and report ABORTED with the error log path."
-3. Wait for all sub-agents to complete before updating `implementations/web-framework-benchmark-2026/prd.json` — mark each slice `passes: true` on SUCCESS, `"aborted"` on ABORTED
+   > "Read root `CLAUDE.md` for project conventions. Read `implementations/01-web-framework-benchmark-2026/CLAUDE.md` for the implementation resume protocol. Read `implementations/01-web-framework-benchmark-2026/issues/<id>-<title>.md` for the full spec. Implement the slice. If quality checks fail, retry up to 5 attempts using different approaches before aborting. On SUCCESS: commit with message `feat: slice <id> — <title>` and report SUCCESS. On ABORT after 5 attempts: write `implementations/01-web-framework-benchmark-2026/errors/<id>-error.md`, commit it, and report ABORTED with the error log path."
+3. Wait for all sub-agents to complete before updating `implementations/01-web-framework-benchmark-2026/prd.json` — mark each slice `passes: true` on SUCCESS, `"aborted"` on ABORTED
 4. If a sub-agent reports FAILURE without having exhausted retries, that is a sub-agent error — relaunch it once before treating the slice as aborted
 
 **Parallelisation map for this project:**
@@ -99,7 +99,7 @@ Wave 4 is the largest parallelisation opportunity: eight independent framework a
 
 **Sub-agent isolation rules:**
 - Each sub-agent works only in its own package directory (`packages/<name>/`) and appends its service to `docker-compose.yml`
-- Sub-agents must NOT modify `implementations/web-framework-benchmark-2026/prd.json` — the orchestrating agent does that after receiving results
+- Sub-agents must NOT modify `implementations/01-web-framework-benchmark-2026/prd.json` — the orchestrating agent does that after receiving results
 - Sub-agents must NOT modify other packages' files
 - If two sub-agents need to edit the same file (e.g. `docker-compose.yml`), the orchestrator merges the changes after both complete rather than letting agents write concurrently
 

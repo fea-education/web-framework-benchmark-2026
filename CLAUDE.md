@@ -6,23 +6,25 @@ A pnpm workspaces monorepo containing eight optimally-implemented e-commerce app
 
 ## Implementations
 
-Per-implementation specs, slice state, and agent instructions live under `implementations/<slug>/`:
+Per-implementation specs, slice state, and agent instructions live under `implementations/<NN-slug>/`. Directories are prefixed with a two-digit number to make the history order explicit:
 
 ```
 implementations/
-  web-framework-benchmark-2026/
+  01-web-framework-benchmark-2026/
     CLAUDE.md       <- agent resume protocol for this implementation
     prd.md          <- full product spec
     prd.json        <- slice state tracker (passes: true/false/"aborted")
     progress.txt    <- append-only learnings log
     issues/         <- per-slice spec files
     errors/         <- abort logs (runtime-generated)
+  02-next-implementation/
+    ...
 ```
 
 To run an implementation with Ralph:
 ```bash
-./scripts/ralph/ralph.sh --impl web-framework-benchmark-2026
-./scripts/ralph/ralph.sh --impl web-framework-benchmark-2026 --tool claude 20
+./scripts/ralph/ralph.sh --impl 01-web-framework-benchmark-2026
+./scripts/ralph/ralph.sh --impl 01-web-framework-benchmark-2026 --tool claude 20
 ```
 
 ## Environment requirements
