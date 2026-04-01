@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: packages/api/Dockerfile
+    profiles: [apps, e2e, e2e-nextjs-app, e2e-nextjs-pages, e2e-sveltekit, e2e-nuxt, e2e-astro-vanilla, e2e-astro-solid, e2e-qwik, e2e-solidstart, benchmark]
     ports:
       - "3000:3000"
     environment:
@@ -22,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: packages/nextjs-app/Dockerfile
+    profiles: [apps, e2e, e2e-nextjs-app, benchmark]
     ports:
       - "3001:3000"
     environment:
@@ -42,6 +44,7 @@ services:
     build:
       context: .
       dockerfile: packages/nextjs-pages/Dockerfile
+    profiles: [apps, e2e, e2e-nextjs-pages, benchmark]
     ports:
       - "3002:3000"
     environment:
@@ -62,6 +65,7 @@ services:
     build:
       context: .
       dockerfile: packages/sveltekit/Dockerfile
+    profiles: [apps, e2e, e2e-sveltekit, benchmark]
     ports:
       - "3003:3000"
     environment:
@@ -82,6 +86,7 @@ services:
     build:
       context: .
       dockerfile: packages/nuxt/Dockerfile
+    profiles: [apps, e2e, e2e-nuxt, benchmark]
     ports:
       - "3004:3000"
     environment:
@@ -102,6 +107,7 @@ services:
     build:
       context: .
       dockerfile: packages/astro-vanilla/Dockerfile
+    profiles: [apps, e2e, e2e-astro-vanilla, benchmark]
     ports:
       - "3005:3000"
     networks:
@@ -117,6 +123,7 @@ services:
     build:
       context: .
       dockerfile: packages/astro-solid/Dockerfile
+    profiles: [apps, e2e, e2e-astro-solid, benchmark]
     ports:
       - "3006:3000"
     networks:
@@ -132,6 +139,7 @@ services:
     build:
       context: .
       dockerfile: packages/qwik/Dockerfile
+    profiles: [apps, e2e, e2e-qwik, benchmark]
     ports:
       - "3007:3000"
     environment:
@@ -152,6 +160,7 @@ services:
     build:
       context: .
       dockerfile: packages/solidstart/Dockerfile
+    profiles: [apps, e2e, e2e-solidstart, benchmark]
     ports:
       - "3008:3000"
     environment:
@@ -173,6 +182,7 @@ services:
     build:
       context: .
       dockerfile: packages/benchmark/Dockerfile
+    profiles: [benchmark]
     environment:
       # API reachable via Docker service name inside benchmark-net
       API_BASE: http://api:3000
@@ -209,6 +219,222 @@ services:
         condition: service_healthy
       solidstart:
         condition: service_healthy
+
+  # ── E2E test runner ──────────────────────────────────────────────────────────
+  e2e:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e]
+    depends_on:
+      api:          { condition: service_healthy }
+      nextjs-app:   { condition: service_healthy }
+      nextjs-pages: { condition: service_healthy }
+      sveltekit:    { condition: service_healthy }
+      nuxt:         { condition: service_healthy }
+      astro-vanilla: { condition: service_healthy }
+      astro-solid:  { condition: service_healthy }
+      qwik:         { condition: service_healthy }
+      solidstart:   { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: ""
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  # ── Per-app E2E services ─────────────────────────────────────────────────────
+  e2e-nextjs-app:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-nextjs-app]
+    depends_on:
+      api:        { condition: service_healthy }
+      nextjs-app: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: nextjs-app
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-nextjs-pages:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-nextjs-pages]
+    depends_on:
+      api:          { condition: service_healthy }
+      nextjs-pages: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: nextjs-pages
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-sveltekit:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-sveltekit]
+    depends_on:
+      api:       { condition: service_healthy }
+      sveltekit: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: sveltekit
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-nuxt:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-nuxt]
+    depends_on:
+      api:  { condition: service_healthy }
+      nuxt: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: nuxt
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-astro-vanilla:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-astro-vanilla]
+    depends_on:
+      api:          { condition: service_healthy }
+      astro-vanilla: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: astro-vanilla
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-astro-solid:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-astro-solid]
+    depends_on:
+      api:         { condition: service_healthy }
+      astro-solid: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: astro-solid
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-qwik:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-qwik]
+    depends_on:
+      api:  { condition: service_healthy }
+      qwik: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: qwik
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
+
+  e2e-solidstart:
+    build:
+      context: .
+      dockerfile: packages/e2e/Dockerfile
+    profiles: [e2e-solidstart]
+    depends_on:
+      api:        { condition: service_healthy }
+      solidstart: { condition: service_healthy }
+    environment:
+      APP_BASE_NEXTJS_APP:    http://nextjs-app:3000
+      APP_BASE_NEXTJS_PAGES:  http://nextjs-pages:3000
+      APP_BASE_SVELTEKIT:     http://sveltekit:3000
+      APP_BASE_NUXT:          http://nuxt:3000
+      APP_BASE_ASTRO_VANILLA: http://astro-vanilla:3000
+      APP_BASE_ASTRO_SOLID:   http://astro-solid:3000
+      APP_BASE_QWIK:          http://qwik:3000
+      APP_BASE_SOLIDSTART:    http://solidstart:3000
+      E2E_PROJECT: solidstart
+    volumes:
+      - ./packages/e2e/playwright-report:/app/packages/e2e/playwright-report
+    networks:
+      - benchmark-net
 
 networks:
   benchmark-net:
