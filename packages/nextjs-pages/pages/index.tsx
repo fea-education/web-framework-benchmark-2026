@@ -2,19 +2,11 @@ import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Layout from "@/components/Layout";
-import type { Product, ApiResponse } from "@benchmark/data";
+import type { Product } from "@benchmark/data";
+import { products } from "@benchmark/data";
 
-const API_URL = process.env["API_URL"] ?? "http://localhost:3000";
-
-export const getStaticProps = (async () => {
-  try {
-    const res = await fetch(`${API_URL}/products`);
-    if (!res.ok) return { props: { products: [] }, revalidate: 60 };
-    const json = (await res.json()) as ApiResponse<Product[]>;
-    return { props: { products: json.data }, revalidate: 60 };
-  } catch {
-    return { props: { products: [] }, revalidate: 60 };
-  }
+export const getStaticProps = (() => {
+  return { props: { products } };
 }) satisfies GetStaticProps<{ products: Product[] }>;
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;

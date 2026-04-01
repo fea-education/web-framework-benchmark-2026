@@ -168,14 +168,46 @@ services:
       retries: 5
       start_period: 20s
 
-  # ── Benchmark runner placeholder (will be implemented in slice 14) ───────────
+  # ── Benchmark runner ─────────────────────────────────────────────────────────
   benchmark:
-    image: node:20-alpine
-    command: echo "benchmark placeholder"
+    build:
+      context: .
+      dockerfile: packages/benchmark/Dockerfile
+    environment:
+      # API reachable via Docker service name inside benchmark-net
+      API_BASE: http://api:3000
+      # App base URLs inside Docker network (service names)
+      APP_BASE_nextjs-app: http://nextjs-app:3000
+      APP_BASE_nextjs-pages: http://nextjs-pages:3000
+      APP_BASE_sveltekit: http://sveltekit:3000
+      APP_BASE_nuxt: http://nuxt:3000
+      APP_BASE_astro-vanilla: http://astro-vanilla:3000
+      APP_BASE_astro-solid: http://astro-solid:3000
+      APP_BASE_qwik: http://qwik:3000
+      APP_BASE_solidstart: http://solidstart:3000
+      RESULTS_DIR: /results
+    volumes:
+      - ./results:/results
     networks:
       - benchmark-net
     depends_on:
       api:
+        condition: service_healthy
+      nextjs-app:
+        condition: service_healthy
+      nextjs-pages:
+        condition: service_healthy
+      sveltekit:
+        condition: service_healthy
+      nuxt:
+        condition: service_healthy
+      astro-vanilla:
+        condition: service_healthy
+      astro-solid:
+        condition: service_healthy
+      qwik:
+        condition: service_healthy
+      solidstart:
         condition: service_healthy
 
 networks:
