@@ -97,6 +97,12 @@ if [ -f "$PRD_FILE" ]; then
   CURRENT_BRANCH=$(jq -r '.branchName // empty' "$PRD_FILE" 2>/dev/null || echo "")
   if [ -n "$CURRENT_BRANCH" ]; then
     echo "$CURRENT_BRANCH" > "$LAST_BRANCH_FILE"
+    # Commit the tracking file if it is new or changed so it is preserved on other machines
+    if ! git -C "$REPO_ROOT" diff --quiet "$LAST_BRANCH_FILE" 2>/dev/null || \
+       ! git -C "$REPO_ROOT" ls-files --error-unmatch "$LAST_BRANCH_FILE" &>/dev/null; then
+      git -C "$REPO_ROOT" add "$LAST_BRANCH_FILE"
+      git -C "$REPO_ROOT" commit -m "chore: track last-branch for $IMPL_SLUG" --quiet || true
+    fi
   fi
 fi
 

@@ -164,7 +164,7 @@ git add implementations/<NN-slug>/
 git commit -m "chore: scaffold implementation <NN-slug>"
 ```
 
-The `scripts/ralph/.last-branch-<NN-slug>` tracking file is written automatically on the first ralph run. Include it in the commit for the first completed slice so the implementation state is resumable on any machine from that point forward.
+The `scripts/ralph/.last-branch-<NN-slug>` tracking file is written and committed automatically by ralph.sh on the first run — no manual step needed.
 
 ### Running an implementation
 
@@ -181,4 +181,4 @@ make implement IMPL=01-web-framework-benchmark-2026
 
 Ralph loops until every slice in `prd.json` is either `passes: true` or `"aborted"`, or until the iteration limit is reached. It resumes cleanly from wherever it left off — re-running the same command is safe.
 
-The `scripts/ralph/.last-branch-<NN-slug>` file is committed alongside each implementation and records the last-seen `branchName` from `prd.json`. This lets Ralph detect when a new implementation starts on any machine and archive the previous run's state automatically.
+The `scripts/ralph/.last-branch-<NN-slug>` file records the last-seen `branchName` from `prd.json`. Ralph writes and commits it automatically on startup, so the implementation state is always resumable on any machine.
